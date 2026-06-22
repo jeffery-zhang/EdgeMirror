@@ -10,10 +10,10 @@
 
 <p align="center">
   <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/box-tools">
-    <img alt="Deploy to Cloudflare" src="https://deploy.workers.cloudflare.com/button">
+    <img alt="Deploy to Cloudflare" src="https://img.shields.io/badge/Deploy%20to-Cloudflare-f38020?style=for-the-badge&logo=cloudflare&logoColor=white&labelColor=111827">
   </a>
   <a href="https://vercel.com/new/clone?repository-url=https://github.com/tianrking/box-tools">
-    <img alt="Deploy with Vercel" src="https://vercel.com/button">
+    <img alt="Deploy with Vercel" src="https://img.shields.io/badge/Deploy%20with-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white&labelColor=111827">
   </a>
 </p>
 
