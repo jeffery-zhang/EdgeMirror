@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <img alt="Verify workflow" src="https://github.com/tianrking/box-tools/actions/workflows/verify.yml/badge.svg">
+  <img alt="Verify" src="https://img.shields.io/github/actions/workflow/status/tianrking/box-tools/verify.yml?branch=main&style=for-the-badge&label=verify">
   <img alt="Runtime" src="https://img.shields.io/badge/runtime-Cloudflare%20Workers%20%7C%20Vercel%20Functions-0f172a?style=for-the-badge">
   <img alt="Language" src="https://img.shields.io/badge/language-JavaScript%20ESM-f7df1e?style=for-the-badge&labelColor=111827">
   <img alt="Package manager" src="https://img.shields.io/badge/package-npm-cb3837?style=for-the-badge">
@@ -35,18 +35,25 @@ DevBox Workers 用一个边缘函数仓库提供一组常用开发加速服务�
 
 ## 技术栈标签卡片
 
-<table>
-  <tr>
-    <td align="center"><strong>边缘运行时</strong><br><img alt="Cloudflare Workers" src="https://img.shields.io/badge/Cloudflare-Workers-f38020?style=flat-square"> <img alt="Vercel Functions" src="https://img.shields.io/badge/Vercel-Functions-000?style=flat-square"></td>
-    <td align="center"><strong>开发语言</strong><br><img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-ESM-f7df1e?style=flat-square&labelColor=111827"></td>
-    <td align="center"><strong>路由模式</strong><br><img alt="Host routing" src="https://img.shields.io/badge/host-routing-2563eb?style=flat-square"> <img alt="Path routing" src="https://img.shields.io/badge/path-routing-16a34a?style=flat-square"></td>
-  </tr>
-  <tr>
-    <td align="center"><strong>代理目标</strong><br><img alt="PyPI" src="https://img.shields.io/badge/PyPI-packages-3775a9?style=flat-square"> <img alt="Hugging Face" src="https://img.shields.io/badge/Hugging%20Face-models-ffd21e?style=flat-square&labelColor=111827"> <img alt="Docker" src="https://img.shields.io/badge/Docker-registry-0db7ed?style=flat-square"></td>
-    <td align="center"><strong>质量门禁</strong><br><img alt="Syntax check" src="https://img.shields.io/badge/syntax-check-22c55e?style=flat-square"> <img alt="Smoke test" src="https://img.shields.io/badge/smoke-tested-22c55e?style=flat-square"> <img alt="Audit" src="https://img.shields.io/badge/npm-audit-22c55e?style=flat-square"></td>
-    <td align="center"><strong>部署体验</strong><br><img alt="One click" src="https://img.shields.io/badge/one--click-deploy-7c3aed?style=flat-square"> <img alt="Wrangler" src="https://img.shields.io/badge/Wrangler-4.x-f38020?style=flat-square"></td>
-  </tr>
-</table>
+<p align="center">
+  <img alt="Cloudflare Workers" src="https://img.shields.io/badge/Cloudflare-Workers-f38020?style=for-the-badge">
+  <img alt="Vercel Functions" src="https://img.shields.io/badge/Vercel-Functions-000?style=for-the-badge">
+  <img alt="JavaScript ESM" src="https://img.shields.io/badge/JavaScript-ESM-f7df1e?style=for-the-badge&labelColor=111827">
+  <img alt="Host routing" src="https://img.shields.io/badge/host-routing-2563eb?style=for-the-badge">
+  <img alt="Path routing" src="https://img.shields.io/badge/path-routing-16a34a?style=for-the-badge">
+  <img alt="PyPI" src="https://img.shields.io/badge/PyPI-packages-3775a9?style=for-the-badge">
+  <img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-wheels-ee4c2c?style=for-the-badge">
+  <img alt="Hugging Face" src="https://img.shields.io/badge/Hugging%20Face-models-ffd21e?style=for-the-badge&labelColor=111827">
+  <img alt="GitHub" src="https://img.shields.io/badge/GitHub-proxy-2da44e?style=for-the-badge">
+  <img alt="Docker" src="https://img.shields.io/badge/Docker-registry-0db7ed?style=for-the-badge">
+  <img alt="Linux mirrors" src="https://img.shields.io/badge/Linux-mirrors-8b5cf6?style=for-the-badge">
+  <img alt="Universal proxy" src="https://img.shields.io/badge/Universal-file%20proxy-d946ef?style=for-the-badge">
+  <img alt="Syntax check" src="https://img.shields.io/badge/syntax-check-22c55e?style=for-the-badge">
+  <img alt="Smoke test" src="https://img.shields.io/badge/smoke-tested-22c55e?style=for-the-badge">
+  <img alt="npm audit" src="https://img.shields.io/badge/npm-audit-22c55e?style=for-the-badge">
+  <img alt="One click deploy" src="https://img.shields.io/badge/one--click-deploy-7c3aed?style=for-the-badge">
+  <img alt="Wrangler" src="https://img.shields.io/badge/Wrangler-4.x-f38020?style=for-the-badge">
+</p>
 
 ## 服务清单
 
