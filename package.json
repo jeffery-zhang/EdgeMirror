@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "check": "node --check src/index.js && node --check src/tools/box.js && node --check src/tools/pypi.js && node --check src/tools/hf.js && node --check src/tools/github.js && node --check src/tools/docker.js && node --check src/tools/mirrors.js && node --check src/tools/proxy.js"
+    "check": "node scripts/check-syntax.mjs"
   },
   "devDependencies": {
-    "wrangler": "^4.18.0"
+    "wrangler": "^4.103.0"
   }
 }

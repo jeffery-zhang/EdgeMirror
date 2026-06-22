@@ -1,4 +1,5 @@
 import box from "./tools/box.js";
+import { HEALTH_PATHS, PROJECT, TOOL_DEFINITIONS } from "./config.js";
 import docker from "./tools/docker.js";
 import github from "./tools/github.js";
 import hf from "./tools/hf.js";
@@ -6,15 +7,20 @@ import mirrors from "./tools/mirrors.js";
 import proxy from "./tools/proxy.js";
 import pypi from "./tools/pypi.js";
 
-const TOOLS = [
-  { key: "box", host: "box.w0x7ce.eu", handler: box },
-  { key: "pypi", host: "pypi.w0x7ce.eu", handler: pypi },
-  { key: "hf", host: "hf.w0x7ce.eu", handler: hf },
-  { key: "github", host: "github.w0x7ce.eu", handler: github },
-  { key: "docker", host: "docker.w0x7ce.eu", handler: docker },
-  { key: "mirrors", host: "mirrors.w0x7ce.eu", handler: mirrors },
-  { key: "proxy", host: "proxy.w0x7ce.eu", handler: proxy, keepPathPrefix: true },
-];
+const HANDLERS = new Map([
+  ["box", box],
+  ["pypi", pypi],
+  ["hf", hf],
+  ["github", github],
+  ["docker", docker],
+  ["mirrors", mirrors],
+  ["proxy", proxy],
+]);
+
+const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
+  ...tool,
+  handler: HANDLERS.get(tool.key),
+}));
 
 const HOST_ROUTES = new Map(TOOLS.map((tool) => [tool.host, tool]));
 const PATH_ROUTES = new Map(TOOLS.map((tool) => [tool.key, tool]));
@@ -22,6 +28,22 @@ const PATH_ROUTES = new Map(TOOLS.map((tool) => [tool.key, tool]));
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    if (HEALTH_PATHS.has(url.pathname)) {
+      return jsonResponse({
+        status: "ok",
+        service: PROJECT.name,
+        version: PROJECT.version,
+        hostname: url.hostname,
+        tools: TOOL_DEFINITIONS.map(({ key, title, host, description }) => ({
+          key,
+          title,
+          host,
+          description,
+        })),
+      });
+    }
+
     const hostTool = HOST_ROUTES.get(url.hostname.toLowerCase());
     if (hostTool) {
       return hostTool.handler.fetch(request, env, ctx);
@@ -37,6 +59,16 @@ export default {
     return box.fetch(request, env, ctx);
   },
 };
+
+function jsonResponse(body, init = {}) {
+  const headers = new Headers(init.headers);
+  headers.set("Content-Type", "application/json; charset=utf-8");
+  headers.set("Cache-Control", "no-store");
+  return new Response(JSON.stringify(body, null, 2), {
+    ...init,
+    headers,
+  });
+}
 
 function stripToolPrefix(request, segment) {
   const url = new URL(request.url);
