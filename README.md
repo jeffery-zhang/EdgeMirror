@@ -29,6 +29,8 @@
 
 DevBox Workers is a single-domain edge application that turns one repository into a fast, self-hostable developer toolbox. The recommended production model is one public domain, such as `box.w0x7ce.eu`, with each accelerator exposed by path: `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, `/proxy`, `/npm`, `/go`, `/maven`, `/crates`, `/downloads`, and `/help`.
 
+Every page includes a shared language switcher for English, Spanish, and Chinese. Tool names stay in English while explanations, usage notes, and common UI labels follow the selected language.
+
 Maintainer: [tianrking](https://github.com/tianrking)
 
 Keywords: Cloudflare Workers proxy, Vercel Functions proxy, PyPI mirror accelerator, PyTorch wheel proxy, Hugging Face mirror, Docker registry proxy, GitHub raw proxy, Linux mirror proxy, npm registry proxy, Go module proxy, Maven proxy, Gradle mirror, crates.io sparse registry proxy, runtime download accelerator, developer toolbox.

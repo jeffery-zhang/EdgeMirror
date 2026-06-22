@@ -1,5 +1,5 @@
 import { HELP_DEFINITION, PROJECT, TOOL_DEFINITIONS } from "./config.js";
-import { getLanguage, preserveLanguageUrl } from "./i18n.js";
+import { getLanguage, preserveLanguageUrl, renderClientI18nScript, renderHeaderLanguageSwitch } from "./i18n.js";
 
 const TOOL_BY_KEY = new Map(TOOL_DEFINITIONS.map((tool) => [tool.key, tool]));
 const KNOWN_HOSTS = new Set(TOOL_DEFINITIONS.map((tool) => tool.host));
@@ -45,8 +45,9 @@ export function renderToolNav(request, activeKey) {
     const href = preserveLanguageUrl(getToolBaseUrl(request, item.key), lang);
     return `<a href="${href}"${active}>${NAV_LABELS[item.key] ?? item.title}</a>`;
   });
+  const languageSwitch = renderHeaderLanguageSwitch(request, lang);
 
-  return `${renderSharedHeaderStyles()}<div class="devbox-header"><nav class="nav" aria-label="Tool navigation">${links.join("")}</nav></div>`;
+  return `${renderSharedHeaderStyles()}<div class="devbox-header"><nav class="nav" aria-label="Tool navigation">${links.join("")}</nav>${languageSwitch}</div>${renderClientI18nScript(lang)}`;
 }
 
 function renderSharedHeaderStyles() {
@@ -63,6 +64,7 @@ function renderSharedHeaderStyles() {
       display: flex !important;
       align-items: center !important;
       justify-content: flex-end !important;
+      gap: 12px !important;
       padding: 0 !important;
       margin: 0 !important;
       min-height: 0 !important;
@@ -92,6 +94,42 @@ function renderSharedHeaderStyles() {
       box-shadow: none !important;
       scrollbar-width: none !important;
       pointer-events: auto !important;
+    }
+    .devbox-lang-switch {
+      flex: 0 0 auto !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      padding: 3px !important;
+      border-radius: 20px !important;
+      background: rgba(255, 255, 255, 0.78) !important;
+      border: 1px solid rgba(15, 23, 42, 0.08) !important;
+      box-shadow: none !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      pointer-events: auto !important;
+    }
+    .devbox-lang-switch a {
+      flex: 0 0 auto !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 28px !important;
+      min-width: 34px !important;
+      padding: 0 9px !important;
+      border-radius: 16px !important;
+      color: #64748b !important;
+      text-decoration: none !important;
+      font-size: 12px !important;
+      font-weight: 900 !important;
+      line-height: 1 !important;
+      white-space: nowrap !important;
+      background: transparent !important;
+      border: 0 !important;
+    }
+    .devbox-lang-switch a.active {
+      background: #0f172a !important;
+      color: #ffffff !important;
     }
     .devbox-header .nav::-webkit-scrollbar { display: none !important; }
     .devbox-header .nav a {
@@ -135,6 +173,7 @@ function renderSharedHeaderStyles() {
         left: 12px !important;
         right: 12px !important;
         justify-content: flex-start !important;
+        gap: 8px !important;
       }
       .devbox-header .nav {
         width: 100% !important;
@@ -143,6 +182,8 @@ function renderSharedHeaderStyles() {
         gap: 6px !important;
       }
       .devbox-header .nav a { min-height: 32px !important; padding: 0 11px !important; font-size: 12px !important; }
+      .devbox-lang-switch { gap: 3px !important; padding: 2px !important; }
+      .devbox-lang-switch a { min-height: 28px !important; min-width: 30px !important; padding: 0 7px !important; font-size: 11px !important; }
     }
   </style>`;
 }

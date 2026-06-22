@@ -147,6 +147,12 @@ function assertHtmlResponse(response, html, name) {
   if (!html.includes('class="devbox-header"')) {
     throw new Error(`${name} is missing unified header wrapper`);
   }
+  if (!html.includes('class="devbox-lang-switch"') || !html.includes('aria-label="Language switcher"')) {
+    throw new Error(`${name} is missing global language switcher`);
+  }
+  if (!html.includes("window.__DEVBOX_I18N__")) {
+    throw new Error(`${name} is missing client i18n payload`);
+  }
 }
 
 function assertNavLinks(html, expectedLinks, name) {

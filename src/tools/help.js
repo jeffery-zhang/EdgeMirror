@@ -1,5 +1,5 @@
 import { PROJECT, TOOL_DEFINITIONS } from "../config.js";
-import { getLanguage, LANGUAGES, renderLanguageSwitch } from "../i18n.js";
+import { getLanguage, LANGUAGES } from "../i18n.js";
 import { getDockerRegistryHost, getToolBaseUrl, renderToolNav } from "../navigation.js";
 import { escapeHtml } from "../proxy-utils.js";
 
@@ -209,7 +209,6 @@ function htmlPage(request) {
   const dockerHost = getDockerRegistryHost(request);
   const proxyDownloadBase = urls.proxy.endsWith("/proxy") ? urls.proxy : `${urls.proxy}/proxy`;
   const nav = renderToolNav(request, "help");
-  const languageSwitch = renderLanguageSwitch(request, lang);
 
   return `<!DOCTYPE html>
 <html lang="${htmlLang}">
@@ -401,7 +400,6 @@ function htmlPage(request) {
         <span class="eyebrow">${escapeHtml(copy.eyebrow)}</span>
         <h1>${escapeHtml(copy.title)}</h1>
         <p class="lead">${escapeHtml(copy.lead)}</p>
-        ${languageSwitch}
       </div>
       <div class="hero-panel">
         <div class="metric"><span>${escapeHtml(copy.primaryDomain)}</span><strong>${escapeHtml(urls.box)}</strong></div>

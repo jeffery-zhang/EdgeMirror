@@ -94,5 +94,5 @@ npm run dev
 
 - La experiencia publica recomendada usa un solo dominio y rutas.
 - Los nombres de herramientas se mantienen en ingles.
-- Las explicaciones y los ejemplos de Help soportan English, Español y 中文 con `?lang=es` y `?lang=zh`.
+- Todas las paginas incluyen un selector compartido para English, Español y 中文. Los nombres de herramientas se mantienen en ingles, mientras que explicaciones, notas de uso y etiquetas comunes siguen el idioma seleccionado.
 - Los limites, autenticacion y terminos de los servicios upstream siguen aplicando.
