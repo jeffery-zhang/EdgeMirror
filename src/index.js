@@ -50,13 +50,20 @@ export default {
     }
 
     const firstSegment = url.pathname.split("/").filter(Boolean)[0];
+
+    if (["v2", "token", "_worker_blob_proxy"].includes(firstSegment)) {
+      return docker.fetch(withToolContext(request, "docker"), env, ctx);
+    }
+
     const pathTool = PATH_ROUTES.get(firstSegment);
     if (pathTool) {
-      const routedRequest = pathTool.keepPathPrefix ? request : stripToolPrefix(request, firstSegment);
+      const routedRequest = pathTool.keepPathPrefix
+        ? withToolContext(request, firstSegment)
+        : stripToolPrefix(request, firstSegment);
       return pathTool.handler.fetch(routedRequest, env, ctx);
     }
 
-    return box.fetch(request, env, ctx);
+    return box.fetch(withToolContext(request, "box"), env, ctx);
   },
 };
 
@@ -78,5 +85,12 @@ function stripToolPrefix(request, segment) {
   } else if (url.pathname.startsWith(`${prefix}/`)) {
     url.pathname = url.pathname.slice(prefix.length);
   }
-  return new Request(url.toString(), request);
+  return withToolContext(new Request(url.toString(), request), segment);
+}
+
+function withToolContext(request, segment) {
+  const headers = new Headers(request.headers);
+  headers.set("X-DevBox-Tool-Key", segment);
+  headers.set("X-DevBox-Base-Path", segment === "box" ? "" : `/${segment}`);
+  return new Request(request, { headers });
 }

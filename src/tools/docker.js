@@ -1,3 +1,5 @@
+import { getDockerRegistryHost, getToolBaseUrl, renderToolNav } from "../navigation.js";
+
 /**
  * Docker Proxy Accelerator (Ultimate Edition)
  * 域名: docker.w0x7ce.eu
@@ -37,7 +39,7 @@ export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
         const userAgent = (request.headers.get('User-Agent') || "").toLowerCase();
-        const workerUrl = `${url.protocol}//${url.hostname}`;
+        const workerUrl = getToolBaseUrl(request, "docker");
 
         // 1. 处理 CORS
         if (request.method === 'OPTIONS') return new Response(null, PREFLIGHT_INIT);
@@ -68,7 +70,7 @@ export default {
 
         // 4. UI 界面
         if (url.pathname === '/' || url.pathname === '/index.html') {
-            return new Response(htmlPage(url.hostname), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+            return new Response(htmlPage(request), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
         }
         if (url.pathname === '/favicon.ico') return new Response(null, { status: 404 });
 
@@ -151,7 +153,9 @@ export default {
 // -----------------------------------------------------------
 // 现代版 UI (粒子背景 + 毛玻璃 + 导航栏)
 // -----------------------------------------------------------
-function htmlPage(domain) {
+function htmlPage(request) {
+    const registryHost = getDockerRegistryHost(request);
+    const nav = renderToolNav(request, "docker");
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -304,13 +308,7 @@ function htmlPage(domain) {
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <a href="https://pypi.w0x7ce.eu">PyPI / Torch</a>
-        <a href="https://hf.w0x7ce.eu">Hugging Face</a>
-        <a href="https://mirrors.w0x7ce.eu">Linux</a>
-        <a href="https://github.w0x7ce.eu">GitHub</a>
-        <a href="https://docker.w0x7ce.eu" class="active">Docker</a>
-    </nav>
+    ${nav}
 
     <canvas id="canvas-bg"></canvas>
 
@@ -343,7 +341,7 @@ function htmlPage(domain) {
     </div>
 
     <script>
-        const domain = "${domain}";
+        const registryHost = "${registryHost}";
         const input = document.getElementById('urlInput');
         const resultBox = document.getElementById('resultBox');
         const cmdText = document.getElementById('cmdText');
@@ -359,7 +357,7 @@ function htmlPage(domain) {
             let matchedRoute = false;
             for (let [domainKey, prefix] of Object.entries(routes)) {
                 if (cleanVal.startsWith(domainKey)) {
-                    finalImage = domain + "/" + prefix + cleanVal.substring(domainKey.length);
+                    finalImage = registryHost + "/" + prefix + cleanVal.substring(domainKey.length);
                     matchedRoute = true;
                     break;
                 }
@@ -367,7 +365,7 @@ function htmlPage(domain) {
             if (!matchedRoute) {
                 // 处理 docker.io 前缀或无前缀
                 let img = cleanVal.replace(/^docker\\.io\\//, '');
-                finalImage = domain + "/" + img;
+                finalImage = registryHost + "/" + img;
             }
             
             cmdText.textContent = "docker pull " + finalImage;

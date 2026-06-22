@@ -1,4 +1,5 @@
 import { hasNativeHtmlRewriter, rewriteHtmlAttributes, rewriteHtmlResponse } from "../html.js";
+import { getToolBaseUrl, renderToolNav } from "../navigation.js";
 
 /**
  * GitHub Proxy Accelerator (Modern Edition + Nav)
@@ -18,10 +19,11 @@ export default {
 async function handleRequest(request) {
   const url = new URL(request.url);
   const path = url.pathname;
+  const workerBaseUrl = getToolBaseUrl(request, "github");
 
   // 1. 根目录返回现代 UI 界面
   if (path === "/" || path === "/index.html") {
-    return new Response(htmlPage(MY_DOMAIN), {
+    return new Response(htmlPage(request), {
       headers: { "Content-Type": "text/html;charset=UTF-8" }
     });
   }
@@ -68,7 +70,7 @@ async function handleRequest(request) {
       const location = response.headers.get("Location");
       if (location) {
         const newLocation = new URL(location, targetUrl).href;
-        const proxyLocation = url.origin + "/" + newLocation;
+        const proxyLocation = workerBaseUrl + "/" + newLocation;
         return new Response(null, {
           status: response.status,
           headers: { "Location": proxyLocation }
@@ -80,9 +82,9 @@ async function handleRequest(request) {
     const contentType = response.headers.get("Content-Type");
     if (contentType && contentType.includes("text/html")) {
       if (!hasNativeHtmlRewriter()) {
-        return rewriteHtmlResponse(response, (html) => rewriteHtmlForNode(html, url.origin));
+        return rewriteHtmlResponse(response, (html) => rewriteHtmlForNode(html, workerBaseUrl));
       }
-      return rewriter(url.origin).transform(response);
+      return rewriter(workerBaseUrl).transform(response);
     }
 
     // 7. 核心加速：流式传输
@@ -152,7 +154,9 @@ function rewriteHtmlForNode(html, workerOrigin) {
 // -----------------------------------------------------------
 // 现代版 UI (粒子背景 + 毛玻璃 + 导航栏)
 // -----------------------------------------------------------
-function htmlPage(domain) {
+function htmlPage(request) {
+    const baseUrl = getToolBaseUrl(request, "github");
+    const nav = renderToolNav(request, "github");
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -329,13 +333,7 @@ function htmlPage(domain) {
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <a href="https://pypi.w0x7ce.eu">PyPI / Torch</a>
-        <a href="https://hf.w0x7ce.eu">Hugging Face</a>
-        <a href="https://mirrors.w0x7ce.eu">Linux</a>
-        <a href="https://github.w0x7ce.eu" class="active">GitHub</a>
-        <a href="https://docker.w0x7ce.eu">Docker</a>
-    </nav>
+    ${nav}
 
     <canvas id="canvas-bg"></canvas>
 
@@ -369,7 +367,7 @@ function htmlPage(domain) {
 
     <script>
         // 核心逻辑
-        const domain = "${domain}";
+        const baseUrl = "${baseUrl}";
         const input = document.getElementById('urlInput');
         const resultBox = document.getElementById('resultBox');
         const cmdText = document.getElementById('cmdText');
@@ -390,9 +388,9 @@ function htmlPage(domain) {
             }
             let proxyUrl = "";
             if (path.startsWith("http")) {
-                 if(path.includes(domain)) { proxyUrl = path; } 
-                 else { proxyUrl = "https://" + domain + "/" + path; }
-            } else { proxyUrl = "https://" + domain + "/" + path + ".git"; }
+                 if(path.includes(baseUrl)) { proxyUrl = path; } 
+                 else { proxyUrl = baseUrl + "/" + path; }
+            } else { proxyUrl = baseUrl + "/" + path + ".git"; }
             cmdText.textContent = "git clone " + proxyUrl;
             resultBox.classList.add('show');
         });

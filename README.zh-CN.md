@@ -87,7 +87,7 @@ Cloudflare 会读取 `wrangler.toml`，创建 Worker，并应用项目配置。`
 https://vercel.com/new/clone?repository-url=https://github.com/tianrking/box-tools
 ```
 
-Vercel 会使用 `api/index.js` 作为 Web Handler 函数入口，并根据 `vercel.json` 把所有路径转发到该函数。在单个 Vercel 域名下使用 `/pypi`、`/hf`、`/github`、`/docker`、`/mirrors`、`/proxy` 这类路径前缀。
+Vercel 会使用 `api/index.js` 作为 Web Handler 函数入口，并根据 `vercel.json` 把所有路径转发到该函数。在单个 Vercel 域名下使用 `/pypi`、`/hf`、`/github`、`/docker`、`/mirrors`、`/proxy` 这类路径前缀。Docker Registry API 流量会在 `/v2`、`/token`、`/_worker_blob_proxy` 自动识别，因此单个 Vercel 域名也可以直接用于 Docker pull，不需要把 `/docker` 写进镜像名。
 
 ## 本地开发
 
@@ -118,6 +118,14 @@ DevBox Workers 支持两种路由方式：
 | --- | --- | --- |
 | 域名路由 | `https://pypi.w0x7ce.eu/simple/` | 适合 Cloudflare 自定义域名 |
 | 路径路由 | `https://your-worker.workers.dev/pypi/simple/` | 适合本地开发和单域名 Vercel 部署 |
+
+单域名部署下的 Docker 用法：
+
+```bash
+docker pull your-app.vercel.app/library/nginx:latest
+```
+
+路由器会自动把 Docker 的 `/v2`、`/token` 和 blob redirect 流量转交给 Docker 工具。
 
 健康检查路径：
 

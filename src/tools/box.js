@@ -1,3 +1,5 @@
+import { getDockerRegistryHost, getToolBaseUrl, renderToolNav } from "../navigation.js";
+
 /**
  * Developer Toolbox Portal (Elegant & Spacious Edition)
  * 域名: box.w0x7ce.eu
@@ -6,13 +8,26 @@
 
 export default {
     async fetch(request) {
-        return new Response(htmlPage(), {
+        return new Response(htmlPage(request), {
             headers: { 'Content-Type': 'text/html; charset=utf-8' }
         });
     }
 };
 
-function htmlPage() {
+function htmlPage(request) {
+    const urls = {
+        box: getToolBaseUrl(request, "box"),
+        pypi: getToolBaseUrl(request, "pypi"),
+        hf: getToolBaseUrl(request, "hf"),
+        github: getToolBaseUrl(request, "github"),
+        docker: getToolBaseUrl(request, "docker"),
+        mirrors: getToolBaseUrl(request, "mirrors"),
+        proxy: getToolBaseUrl(request, "proxy"),
+    };
+    const dockerRegistryHost = getDockerRegistryHost(request);
+    const proxyDownloadBaseUrl = urls.proxy.endsWith("/proxy") ? urls.proxy : `${urls.proxy}/proxy`;
+    const nav = renderToolNav(request, "box");
+
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -46,6 +61,11 @@ function htmlPage() {
         }
 
         #canvas-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+        .nav { position: absolute; top: 20px; right: 30px; display: flex; gap: 10px; z-index: 10; flex-wrap: wrap; justify-content: flex-end; }
+        .nav a { text-decoration: none; color: var(--text-desc); font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 20px; transition: all 0.2s; background: rgba(255,255,255,0.72); border: 1px solid rgba(15,23,42,0.08); backdrop-filter: blur(8px); }
+        .nav a:hover { color: #0f172a; background: #fff; transform: translateY(-1px); }
+        .nav a.active { background: #0f172a; color: #fff; border-color: #0f172a; }
 
         /* --- Header --- */
         header { text-align: center; padding: 100px 20px 60px; z-index: 1; animation: fadeIn 1s ease; }
@@ -226,6 +246,7 @@ function htmlPage() {
 </head>
 <body>
     <canvas id="canvas-bg"></canvas>
+    ${nav}
 
     <header>
         <div class="logo-box">B</div>
@@ -342,14 +363,14 @@ function htmlPage() {
                 icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>',
                 content: [
                     \`<div class="instruction">Temporary Install</div>
-                    <div class="code-wrap"><span class="comment"># 单次安装依赖</span><br><div class="code-pre"><span class="cmd">pip</span> install <span class="arg">numpy</span> -i https://pypi.w0x7ce.eu/simple</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
-                    <a href="https://pypi.w0x7ce.eu" target="_blank" style="color:var(--c-pypi)">Go to Website →</a>\`,
+                    <div class="code-wrap"><span class="comment"># 单次安装依赖</span><br><div class="code-pre"><span class="cmd">pip</span> install <span class="arg">numpy</span> -i ${urls.pypi}/simple</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
+                    <a href="${urls.pypi}" target="_blank" style="color:var(--c-pypi)">Go to Website →</a>\`,
                     
                     \`<div class="instruction">Global Configuration (Recommended)</div>
-                    <div class="code-wrap"><span class="comment"># 设置为默认源，永久生效</span><br><div class="code-pre"><span class="cmd">pip</span> config set global.index-url https://pypi.w0x7ce.eu/simple</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`,
+                    <div class="code-wrap"><span class="comment"># 设置为默认源，永久生效</span><br><div class="code-pre"><span class="cmd">pip</span> config set global.index-url ${urls.pypi}/simple</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`,
                     
                     \`<div class="instruction">Install PyTorch (CUDA 11.8)</div>
-                    <div class="code-wrap"><span class="comment"># PyTorch 专用加速通道</span><br><div class="code-pre"><span class="cmd">pip</span> install torch torchvision --index-url https://pypi.w0x7ce.eu/pytorch/cu118</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
+                    <div class="code-wrap"><span class="comment"># PyTorch 专用加速通道</span><br><div class="code-pre"><span class="cmd">pip</span> install torch torchvision --index-url ${urls.pypi}/pytorch/cu118</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
                 ]
             },
             hf: {
@@ -359,14 +380,14 @@ function htmlPage() {
                 icon: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M15 9h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-6 0H8a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm3 4a3 3 0 0 0-3 3 .5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5 3 3 0 0 0-3-3Z"/>',
                 content: [
                     \`<div class="instruction">Hugging Face CLI</div>
-                    <div class="code-wrap"><span class="comment"># 设置环境变量并下载</span><br><div class="code-pre">export HF_ENDPOINT=https://hf.w0x7ce.eu<br><span class="cmd">huggingface-cli</span> download <span class="arg">meta-llama/Llama-2-7b-hf</span></div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
-                    <a href="https://hf.w0x7ce.eu" target="_blank" style="color:var(--c-hf)">Go to Website →</a>\`,
+                    <div class="code-wrap"><span class="comment"># 设置环境变量并下载</span><br><div class="code-pre">export HF_ENDPOINT=${urls.hf}<br><span class="cmd">huggingface-cli</span> download <span class="arg">meta-llama/Llama-2-7b-hf</span></div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
+                    <a href="${urls.hf}" target="_blank" style="color:var(--c-hf)">Go to Website →</a>\`,
                     
                     \`<div class="instruction">Python Code</div>
-                    <div class="code-wrap"><div class="code-pre">import os<br>os.environ["HF_ENDPOINT"] = "https://hf.w0x7ce.eu"<br><br>from huggingface_hub import snapshot_download<br>snapshot_download(repo_id="<span class="arg">gpt2</span>")</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`,
+                    <div class="code-wrap"><div class="code-pre">import os<br>os.environ["HF_ENDPOINT"] = "${urls.hf}"<br><br>from huggingface_hub import snapshot_download<br>snapshot_download(repo_id="<span class="arg">gpt2</span>")</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`,
 
                     \`<div class="instruction">High Speed (Multi-thread)</div>
-                    <div class="code-wrap"><span class="comment"># 启用 hf_transfer 加速下载</span><br><div class="code-pre">pip install hf_transfer<br>export HF_HUB_ENABLE_HF_TRANSFER=1<br>export HF_ENDPOINT=https://hf.w0x7ce.eu</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
+                    <div class="code-wrap"><span class="comment"># 启用 hf_transfer 加速下载</span><br><div class="code-pre">pip install hf_transfer<br>export HF_HUB_ENABLE_HF_TRANSFER=1<br>export HF_ENDPOINT=${urls.hf}</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
                 ]
             },
             github: {
@@ -376,11 +397,11 @@ function htmlPage() {
                 icon: '<path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"/>',
                 content: [
                     \`<div class="instruction">Clone Repository</div>
-                    <div class="code-wrap"><div class="code-pre"><span class="cmd">git</span> clone https://github.w0x7ce.eu/<span class="arg">username/repo</span></div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
-                    <a href="https://github.w0x7ce.eu" target="_blank" style="color:var(--c-github)">Go to Website →</a>\`,
+                    <div class="code-wrap"><div class="code-pre"><span class="cmd">git</span> clone ${urls.github}/<span class="arg">username/repo</span></div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
+                    <a href="${urls.github}" target="_blank" style="color:var(--c-github)">Go to Website →</a>\`,
                     
                     \`<div class="instruction">Download Release / Raw</div>
-                    <div class="code-wrap"><div class="code-pre"><span class="cmd">wget</span> https://github.w0x7ce.eu/https://github.com/.../file.zip</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
+                    <div class="code-wrap"><div class="code-pre"><span class="cmd">wget</span> ${urls.github}/https://github.com/.../file.zip</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
                 ]
             },
             docker: {
@@ -390,11 +411,11 @@ function htmlPage() {
                 icon: '<path d="M2 13h2v2H2zm4 0h2v2H6zm-2-4h2v2H4zm4 0h2v2H8zm-2-4h2v2H6zm6 8h2v2h-2zm-2-4h2v2h-2zm4 0h2v2h-2zm2 4h2v2h-2zm-2-4h2v2h-2zm4 0h2v2h-2zm-2-4h2v2h-2zm-2-4h2v2h-2zm12 12h-2v4h-2v-4h-2v4h-2v-4h-2v4H2v-2h18v-2h2v4z"/>',
                 content: [
                     \`<div class="instruction">Direct Pull</div>
-                    <div class="code-wrap"><div class="code-pre"><span class="cmd">docker</span> pull docker.w0x7ce.eu/library/<span class="arg">nginx:latest</span></div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
-                    <a href="https://docker.w0x7ce.eu" target="_blank" style="color:var(--c-docker)">Go to Website →</a>\`,
+                    <div class="code-wrap"><div class="code-pre"><span class="cmd">docker</span> pull ${dockerRegistryHost}/library/<span class="arg">nginx:latest</span></div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
+                    <a href="${urls.docker}" target="_blank" style="color:var(--c-docker)">Go to Website →</a>\`,
                     
                     \`<div class="instruction">/etc/docker/daemon.json</div>
-                    <div class="code-wrap"><div class="code-pre">{<br>  "registry-mirrors": [<br>    "https://docker.w0x7ce.eu"<br>  ]<br>}</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
+                    <div class="code-wrap"><div class="code-pre">{<br>  "registry-mirrors": [<br>    "https://${dockerRegistryHost}"<br>  ]<br>}</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
                     <div class="code-wrap"><span class="comment"># 重启 Docker 生效</span><br><div class="code-pre">sudo systemctl daemon-reload && sudo systemctl restart docker</div></div>\`
                 ]
             },
@@ -405,11 +426,11 @@ function htmlPage() {
                 icon: '<path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>',
                 content: [
                     \`<div class="instruction">/etc/apt/sources.list</div>
-                    <div class="code-wrap"><div class="code-pre">deb https://mirrors.w0x7ce.eu/http://archive.ubuntu.com/ubuntu/ jammy main restricted</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
-                    <a href="https://mirrors.w0x7ce.eu" target="_blank" style="color:var(--c-linux)">Go to Website →</a>\`,
+                    <div class="code-wrap"><div class="code-pre">deb ${urls.mirrors}/http://archive.ubuntu.com/ubuntu/ jammy main restricted</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
+                    <a href="${urls.mirrors}" target="_blank" style="color:var(--c-linux)">Go to Website →</a>\`,
                     
                     \`<div class="instruction">/etc/yum.repos.d/xxx.repo</div>
-                    <div class="code-wrap"><div class="code-pre">baseurl=https://mirrors.w0x7ce.eu/http://mirror.centos.org/centos/7/os/x86_64/</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
+                    <div class="code-wrap"><div class="code-pre">baseurl=${urls.mirrors}/http://mirror.centos.org/centos/7/os/x86_64/</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
                 ]
             },
             proxy: {
@@ -419,11 +440,11 @@ function htmlPage() {
                 icon: '<path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>',
                 content: [
                     \`<div class="instruction">Wget Download</div>
-                    <div class="code-wrap"><div class="code-pre"><span class="cmd">wget</span> "https://proxy.w0x7ce.eu/https://example.com/file.zip"</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
-                    <a href="https://proxy.w0x7ce.eu" target="_blank" style="color:var(--c-proxy)">Go to Website →</a>\`,
+                    <div class="code-wrap"><div class="code-pre"><span class="cmd">wget</span> "${proxyDownloadBaseUrl}/https://example.com/file.zip"</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>
+                    <a href="${urls.proxy}" target="_blank" style="color:var(--c-proxy)">Go to Website →</a>\`,
                     
                     \`<div class="instruction">Curl Download</div>
-                    <div class="code-wrap"><div class="code-pre"><span class="cmd">curl</span> -L -O "https://proxy.w0x7ce.eu/https://example.com/file.zip"</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
+                    <div class="code-wrap"><div class="code-pre"><span class="cmd">curl</span> -L -O "${proxyDownloadBaseUrl}/https://example.com/file.zip"</div><button class="modal-copy-btn" onclick="copyText(this)">Copy</button></div>\`
                 ]
             }
         };

@@ -1,3 +1,5 @@
+import { getToolBaseUrl, renderToolNav } from "../navigation.js";
+
 /**
  * Universal Linux Mirrors Proxy (Light & Fresh Edition)
  * 域名: mirrors.w0x7ce.eu
@@ -23,14 +25,14 @@ const DROP_HEADERS = ['cf-connecting-ip', 'cf-ipcountry', 'x-forwarded-for', 'cf
 export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
-        const workerUrl = `${url.protocol}//${url.hostname}`;
+        const workerUrl = getToolBaseUrl(request, "mirrors");
 
         // 1. 处理 CORS 预检
         if (request.method === 'OPTIONS') return new Response(null, PREFLIGHT_INIT);
 
         // 2. 首页 UI (多功能生成器)
         if (url.pathname === '/' || url.pathname === '/index.html') {
-            return new Response(htmlPage(url.hostname), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+            return new Response(htmlPage(request), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
         }
         if (url.pathname === '/favicon.ico') return new Response(null, { status: 404 });
 
@@ -96,7 +98,9 @@ export default {
 };
 
 // ---------------- UI 部分 (清淡紫罗兰 + 导航栏) ----------------
-function htmlPage(domain) {
+function htmlPage(request) {
+    const baseUrl = getToolBaseUrl(request, "mirrors");
+    const nav = renderToolNav(request, "mirrors");
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -205,13 +209,7 @@ function htmlPage(domain) {
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <a href="https://pypi.w0x7ce.eu">PyPI / Torch</a>
-        <a href="https://hf.w0x7ce.eu">Hugging Face</a>
-        <a href="https://mirrors.w0x7ce.eu" class="active">Linux</a>
-        <a href="https://github.w0x7ce.eu">GitHub</a>
-        <a href="https://docker.w0x7ce.eu">Docker</a>
-    </nav>
+    ${nav}
 
     <canvas id="canvas-bg"></canvas>
 
@@ -257,7 +255,7 @@ function htmlPage(domain) {
     </div>
 
     <script>
-        const domain = "${domain}";
+        const baseUrl = "${baseUrl}";
         const input = document.getElementById('target');
         const resultArea = document.getElementById('resultArea');
         
@@ -266,7 +264,7 @@ function htmlPage(domain) {
             if (!val || val.length < 4 || !val.includes('.')) { resultArea.classList.remove('show'); return; }
 
             resultArea.classList.add('show');
-            const proxyUrl = \`https://\${domain}/\${val}\`;
+            const proxyUrl = \`${baseUrl}/\${val}\`;
 
             document.getElementById('code-apt').innerHTML = 
                 \`<span class="comment"># /etc/apt/sources.list</span><br>deb \${proxyUrl} jammy main restricted universe multiverse\`;

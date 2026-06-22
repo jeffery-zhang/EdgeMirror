@@ -1,3 +1,5 @@
+import { getToolBaseUrl, renderToolNav } from "../navigation.js";
+
 /**
  * Universal File Proxy Downloader (Safe Mode)
  * 域名: proxy.w0x7ce.eu
@@ -69,8 +71,8 @@ export default {
         }
 
         // 3. UI 界面
-        if (url.pathname === '/' || url.pathname === '/index.html') {
-            return new Response(htmlPage(url.hostname), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+        if (url.pathname === '/' || url.pathname === '/index.html' || url.pathname === '/proxy' || url.pathname === '/proxy/index.html') {
+            return new Response(htmlPage(request), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
         }
 
         return new Response("Not Found", { status: 404 });
@@ -111,7 +113,10 @@ function getFilenameFromUrl(urlStr, contentType) {
 }
 
 // ---------------- UI 部分 ----------------
-function htmlPage(domain) {
+function htmlPage(request) {
+    const baseUrl = getToolBaseUrl(request, "proxy");
+    const downloadBaseUrl = baseUrl.endsWith("/proxy") ? baseUrl : `${baseUrl}/proxy`;
+    const nav = renderToolNav(request, "proxy");
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -165,14 +170,7 @@ function htmlPage(domain) {
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <a href="https://pypi.w0x7ce.eu">PyPI</a>
-        <a href="https://hf.w0x7ce.eu">Hugging Face</a>
-        <a href="https://mirrors.w0x7ce.eu">Linux</a>
-        <a href="https://github.w0x7ce.eu">GitHub</a>
-        <a href="https://docker.w0x7ce.eu">Docker</a>
-        <a href="#" class="active">Proxy</a>
-    </nav>
+    ${nav}
 
     <canvas id="canvas-bg"></canvas>
 
@@ -221,7 +219,7 @@ function htmlPage(domain) {
     </div>
 
     <script>
-        const domain = "${domain}";
+        const downloadBaseUrl = "${downloadBaseUrl}";
         const input = document.getElementById('urlInput');
         const resultArea = document.getElementById('resultArea');
         const downloadBtn = document.getElementById('downloadBtn');
@@ -243,7 +241,7 @@ function htmlPage(domain) {
             resultArea.classList.add('show');
             
             const encodedUrl = encodeURIComponent(val);
-            const proxyUrl = \`https://\${domain}/proxy/\` + val; 
+            const proxyUrl = \`${downloadBaseUrl}/\` + val; 
 
             linkText.innerText = proxyUrl;
             downloadBtn.href = proxyUrl;

@@ -1,3 +1,5 @@
+import { getToolBaseUrl, renderToolNav } from "../navigation.js";
+
 /**
  * Hugging Face Proxy Accelerator (Ultimate Light Edition)
  * 域名: hf.w0x7ce.eu
@@ -27,14 +29,14 @@ const DROP_REQ_HEADERS = ['content-length', 'content-type', 'host'];
 export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
-        const workerUrl = `${url.protocol}//${url.hostname}`;
+        const workerUrl = getToolBaseUrl(request, "hf");
 
         // 1. 处理 CORS
         if (request.method === 'OPTIONS') return new Response(null, PREFLIGHT_INIT);
 
         // 2. UI 界面
         if (url.pathname === '/' || url.pathname === '/index.html') {
-            return new Response(htmlPage(url.hostname), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+            return new Response(htmlPage(request), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
         }
 
         // ================== 通用代理逻辑 ==================
@@ -124,7 +126,9 @@ export default {
 };
 
 // ---------------- UI 部分 (清淡亮色 + 粒子 + 导航栏 + Footer) ----------------
-function htmlPage(domain) {
+function htmlPage(request) {
+    const baseUrl = getToolBaseUrl(request, "hf");
+    const nav = renderToolNav(request, "hf");
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -215,13 +219,7 @@ function htmlPage(domain) {
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <a href="https://pypi.w0x7ce.eu">PyPI / Torch</a>
-        <a href="https://hf.w0x7ce.eu" class="active">Hugging Face</a>
-        <a href="https://mirrors.w0x7ce.eu">Linux</a>
-        <a href="https://github.w0x7ce.eu">GitHub</a>
-        <a href="https://docker.w0x7ce.eu">Docker</a>
-    </nav>
+    ${nav}
 
     <canvas id="canvas-bg"></canvas>
 
@@ -246,7 +244,7 @@ function htmlPage(domain) {
     </div>
 
     <script>
-        const domain = "${domain}";
+        const baseUrl = "${baseUrl}";
         const input = document.getElementById('modelInput');
         const cmdBox = document.getElementById('cmdBox');
         const cmdText = document.getElementById('cmdText');
@@ -256,7 +254,7 @@ function htmlPage(domain) {
             if (!val) { cmdBox.classList.remove('show'); return; }
             if (val.length < 3 || !val.includes('/')) { cmdBox.classList.remove('show'); return; }
 
-            cmdText.innerHTML = \`export HF_ENDPOINT=https://\${domain}<br>huggingface-cli download \${val}\`;
+            cmdText.innerHTML = \`export HF_ENDPOINT=\${baseUrl}<br>huggingface-cli download \${val}\`;
             cmdBox.classList.add('show');
         });
 

@@ -87,7 +87,7 @@ Click the Vercel button at the top of this README, or open:
 https://vercel.com/new/clone?repository-url=https://github.com/tianrking/box-tools
 ```
 
-Vercel uses `api/index.js` as a Web Handler function and `vercel.json` to route every path to that function. On a single Vercel domain, use path prefixes like `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, and `/proxy`.
+Vercel uses `api/index.js` as a Web Handler function and `vercel.json` to route every path to that function. On a single Vercel domain, use path prefixes like `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, and `/proxy`. Docker Registry API traffic is also auto-detected at `/v2`, `/token`, and `/_worker_blob_proxy`, so a single Vercel domain can serve Docker pulls without a `/docker` prefix in the image name.
 
 ## Local Development
 
@@ -118,6 +118,14 @@ DevBox Workers supports two routing styles:
 | --- | --- | --- |
 | Host routing | `https://pypi.w0x7ce.eu/simple/` | Best for Cloudflare custom domains |
 | Path routing | `https://your-worker.workers.dev/pypi/simple/` | Best for local dev and single-domain Vercel deployments |
+
+For Docker on a single-domain deployment, use the deployment host directly:
+
+```bash
+docker pull your-app.vercel.app/library/nginx:latest
+```
+
+The router forwards Docker's `/v2`, `/token`, and blob redirect traffic to the Docker tool automatically.
 
 Health checks are available at:
 

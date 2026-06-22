@@ -1,4 +1,5 @@
 import { hasNativeHtmlRewriter, rewriteHtmlResponse } from "../html.js";
+import { getToolBaseUrl, renderToolNav } from "../navigation.js";
 
 /**
  * Python Universal Proxy (PyPI + PyTorch + Nav)
@@ -32,7 +33,7 @@ export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
         const userAgent = (request.headers.get('User-Agent') || "").toLowerCase();
-        const workerUrl = `${url.protocol}//${url.hostname}`;
+        const workerUrl = getToolBaseUrl(request, "pypi");
 
         // 1. 处理 CORS
         if (request.method === 'OPTIONS') {
@@ -46,7 +47,7 @@ export default {
 
         // 3. 根路径返回 UI
         if (url.pathname === '/' || url.pathname === '/index.html') {
-            return new Response(htmlPage(url.hostname), {
+            return new Response(htmlPage(request), {
                 headers: { 'Content-Type': 'text/html; charset=utf-8' }
             });
         }
@@ -207,7 +208,9 @@ class PytorchLinkRewriter {
 // -----------------------------------------------------------
 // 现代版 UI (粒子背景 + 导航栏)
 // -----------------------------------------------------------
-function htmlPage(domain) {
+function htmlPage(request) {
+    const baseUrl = getToolBaseUrl(request, "pypi");
+    const nav = renderToolNav(request, "pypi");
     return `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -257,13 +260,7 @@ function htmlPage(domain) {
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <a href="https://pypi.w0x7ce.eu" class="active">PyPI / Torch</a>
-        <a href="https://hf.w0x7ce.eu">Hugging Face</a>
-        <a href="https://mirrors.w0x7ce.eu">Linux</a>
-        <a href="https://github.w0x7ce.eu">GitHub</a>
-        <a href="https://docker.w0x7ce.eu">Docker</a>
-    </nav>
+    ${nav}
 
     <canvas id="canvas-bg"></canvas>
     <div class="container">
@@ -288,7 +285,7 @@ function htmlPage(domain) {
     </div>
     <div class="footer">Made with <span class="heart">❤</span> by <a href="https://github.com/w0x7ce" target="_blank">w0x7ce</a></div>
     <script>
-        const domain = "${domain}";
+        const baseUrl = "${baseUrl}";
         const input = document.getElementById('urlInput');
         const resultBox = document.getElementById('resultBox');
         const cmdText = document.getElementById('cmdText');
@@ -302,10 +299,10 @@ function htmlPage(domain) {
             if (cleanVal.includes("torch") || cleanVal.includes("vision") || cleanVal.includes("audio")) {
                 // PyTorch 专用命令
                 // 默认使用 cu118，映射到 https://download.pytorch.org/whl/cu118
-                cmd = \`pip install \${cleanVal} --index-url https://\${domain}/pytorch/cu118\`;
+                cmd = \`pip install \${cleanVal} --index-url \${baseUrl}/pytorch/cu118\`;
             } else {
                 // 标准 PyPI 命令
-                cmd = \`pip install \${cleanVal} -i https://\${domain}/simple/\`;
+                cmd = \`pip install \${cleanVal} -i \${baseUrl}/simple/\`;
             }
             
             cmdText.textContent = cmd;
