@@ -60,11 +60,6 @@ export default {
       });
     }
 
-    const hostTool = HOST_ROUTES.get(url.hostname.toLowerCase());
-    if (hostTool) {
-      return hostTool.handler.fetch(request, env, ctx);
-    }
-
     const firstSegment = url.pathname.split("/").filter(Boolean)[0];
 
     if (["v2", "token", "_worker_blob_proxy"].includes(firstSegment)) {
@@ -77,6 +72,11 @@ export default {
         ? withToolContext(request, firstSegment)
         : stripToolPrefix(request, firstSegment);
       return pathTool.handler.fetch(routedRequest, env, ctx);
+    }
+
+    const hostTool = HOST_ROUTES.get(url.hostname.toLowerCase());
+    if (hostTool) {
+      return hostTool.handler.fetch(request, env, ctx);
     }
 
     return box.fetch(withToolContext(request, "box"), env, ctx);

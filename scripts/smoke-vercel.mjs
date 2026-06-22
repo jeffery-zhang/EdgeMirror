@@ -17,6 +17,22 @@ const TOOLS = [
   { key: "help", path: "/help", host: "box.w0x7ce.eu" },
 ];
 
+const PAGE_IDENTITY = new Map([
+  ["box", "Stable accelerators"],
+  ["pypi", "PyTorch"],
+  ["hf", "Model hub accelerator"],
+  ["github", "GitHub 加速通道"],
+  ["docker", "Docker Proxy Accelerator"],
+  ["mirrors", "Linux repository accelerator"],
+  ["proxy", "Universal File Fetcher"],
+  ["npm", "npm / pnpm / yarn Proxy"],
+  ["go", "Go Module Proxy"],
+  ["maven", "Maven / Gradle Proxy"],
+  ["crates", "crates.io Sparse Proxy"],
+  ["downloads", "Runtime & Release Downloads"],
+  ["help", "一个域名，所有加速入口。"],
+]);
+
 const checks = [
   {
     name: "health",
@@ -74,14 +90,26 @@ for (const tool of TOOLS) {
   const html = await response.text();
   assertHtmlResponse(response, html, `${tool.key} page`);
   assertNavLinks(html, TOOLS.map((item) => `${BASE_URL}${item.path}`), `${tool.key} path nav`);
+  assertPageIdentity(html, tool.key, `${tool.key} path page`);
   console.log(`ok ${tool.key} path page nav`);
 }
 
 for (const tool of TOOLS) {
-  const response = await api.default.fetch(new Request(`https://${tool.host}/`));
+  const response = await api.default.fetch(new Request(`https://box.w0x7ce.eu${tool.path}`));
+  const html = await response.text();
+  assertHtmlResponse(response, html, `${tool.key} primary-domain path page`);
+  assertNavLinks(html, TOOLS.map((item) => `https://box.w0x7ce.eu${item.path}`), `${tool.key} primary-domain nav`);
+  assertPageIdentity(html, tool.key, `${tool.key} primary-domain path page`);
+  console.log(`ok ${tool.key} primary-domain path page nav`);
+}
+
+for (const tool of TOOLS) {
+  const hostUrl = tool.key === "help" ? `https://${tool.host}${tool.path}` : `https://${tool.host}/`;
+  const response = await api.default.fetch(new Request(hostUrl));
   const html = await response.text();
   assertHtmlResponse(response, html, `${tool.key} host page`);
   assertNavLinks(html, TOOLS.map((item) => `https://box.w0x7ce.eu${item.path}`), `${tool.key} host nav`);
+  assertPageIdentity(html, tool.key, `${tool.key} host page`);
   console.log(`ok ${tool.key} host page nav`);
 }
 
@@ -102,5 +130,12 @@ function assertNavLinks(html, expectedLinks, name) {
     if (!hrefs.includes(link)) {
       throw new Error(`${name} is missing ${link}. Found: ${hrefs.join(", ")}`);
     }
+  }
+}
+
+function assertPageIdentity(html, key, name) {
+  const marker = PAGE_IDENTITY.get(key);
+  if (marker && !html.includes(marker)) {
+    throw new Error(`${name} is missing identity marker: ${marker}`);
   }
 }

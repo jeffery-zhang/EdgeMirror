@@ -183,6 +183,30 @@ function htmlPage(request) {
         }
         .container:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); }
 
+        .service-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #111827; color: var(--accent);
+            border-radius: 999px; padding: 8px 14px; margin-bottom: 18px;
+            font-size: 12px; font-weight: 800; letter-spacing: 0; text-transform: uppercase;
+        }
+        .hf-focus {
+            display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
+            margin: 0 0 26px;
+        }
+        .focus-item {
+            background: #fff8cf; border: 1px solid rgba(255, 210, 30, 0.55);
+            border-radius: 10px; padding: 12px 8px;
+        }
+        .focus-item strong { display: block; color: #111827; font-size: 13px; margin-bottom: 4px; }
+        .focus-item span { color: #6b7280; font-size: 11px; line-height: 1.4; }
+        .endpoint-panel {
+            background: #111827; color: #f9fafb; border-radius: 12px;
+            padding: 14px 16px; margin-bottom: 18px; text-align: left;
+            border: 1px solid #000;
+        }
+        .endpoint-panel span { display: block; color: #facc15; font-size: 12px; font-weight: 800; margin-bottom: 6px; }
+        .endpoint-panel code { color: #e5e7eb; font-family: 'SFMono-Regular', Consolas, monospace; word-break: break-all; }
+
         h1 { margin-bottom: 30px; font-weight: 300; font-size: 28px; }
         h1 b { color: #000; font-weight: 700; position: relative; }
         h1 b::after { content: ''; position: absolute; bottom: 2px; left: 0; width: 100%; height: 8px; background: var(--accent); z-index: -1; opacity: 0.6; border-radius: 2px;}
@@ -214,6 +238,11 @@ function htmlPage(request) {
 
         @keyframes fadeUp { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        @media (max-width: 640px) {
+            body { justify-content: flex-start; padding-top: 96px; overflow-y: auto; }
+            .container { padding: 28px 18px; }
+            .hf-focus { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
     </style>
 </head>
 <body>
@@ -222,7 +251,18 @@ function htmlPage(request) {
     <canvas id="canvas-bg"></canvas>
 
     <div class="container">
+        <div class="service-badge">Model hub accelerator</div>
         <h1>Hugging Face <b>Proxy</b></h1>
+        <div class="hf-focus">
+            <div class="focus-item"><strong>Models</strong><span>snapshot_download</span></div>
+            <div class="focus-item"><strong>Datasets</strong><span>dataset files</span></div>
+            <div class="focus-item"><strong>LFS</strong><span>large weights</span></div>
+            <div class="focus-item"><strong>Transfer</strong><span>multi-thread</span></div>
+        </div>
+        <div class="endpoint-panel">
+            <span>HF_ENDPOINT</span>
+            <code>${baseUrl}</code>
+        </div>
         <input type="text" id="modelInput" placeholder="e.g. meta-llama/Llama-2-7b-hf" autocomplete="off" spellcheck="false">
         
         <div class="cmd" id="cmdBox">
