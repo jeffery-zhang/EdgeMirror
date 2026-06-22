@@ -51,41 +51,43 @@ export function renderToolNav(request, activeKey) {
 
 function renderSharedHeaderStyles() {
   return `<style>
-    :root { --devbox-header-height: 64px; }
+    :root { --devbox-header-height: 74px; }
     body { padding-top: var(--devbox-header-height) !important; }
     .devbox-header {
       position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
+      top: 20px !important;
+      left: 24px !important;
+      right: 30px !important;
       z-index: 10000 !important;
-      height: var(--devbox-header-height) !important;
+      height: auto !important;
       display: flex !important;
       align-items: center !important;
-      background: rgba(255, 255, 255, 0.92) !important;
-      border-bottom: 1px solid rgba(203, 213, 225, 0.88) !important;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
-      backdrop-filter: blur(16px) !important;
-      -webkit-backdrop-filter: blur(16px) !important;
+      justify-content: flex-end !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      pointer-events: none !important;
     }
     .devbox-header .nav {
       position: static !important;
       inset: auto !important;
-      width: 100% !important;
-      height: 100% !important;
+      width: auto !important;
+      max-width: 100% !important;
+      height: auto !important;
       display: flex !important;
       align-items: center !important;
-      justify-content: flex-start !important;
-      flex-wrap: nowrap !important;
-      gap: 8px !important;
+      justify-content: flex-end !important;
+      flex-wrap: wrap !important;
+      gap: 10px !important;
       overflow-x: auto !important;
       overflow-y: hidden !important;
-      padding: 0 18px !important;
+      padding: 0 !important;
       margin: 0 !important;
       background: transparent !important;
       border: 0 !important;
       box-shadow: none !important;
       scrollbar-width: none !important;
+      pointer-events: auto !important;
     }
     .devbox-header .nav::-webkit-scrollbar { display: none !important; }
     .devbox-header .nav a {
@@ -93,11 +95,11 @@ function renderSharedHeaderStyles() {
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-      min-height: 36px !important;
-      padding: 0 13px !important;
-      border-radius: 999px !important;
-      border: 1px solid rgba(203, 213, 225, 0.95) !important;
-      background: rgba(248, 250, 252, 0.82) !important;
+      min-height: 34px !important;
+      padding: 0 14px !important;
+      border-radius: 20px !important;
+      border: 1px solid rgba(15, 23, 42, 0.08) !important;
+      background: rgba(255, 255, 255, 0.72) !important;
       color: #475569 !important;
       text-decoration: none !important;
       font-size: 13px !important;
@@ -106,22 +108,37 @@ function renderSharedHeaderStyles() {
       white-space: nowrap !important;
       transform: none !important;
       box-shadow: none !important;
-      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
     }
     .devbox-header .nav a:hover {
-      background: #eef2ff !important;
+      background: #ffffff !important;
       color: #0f172a !important;
-      border-color: #c7d2fe !important;
+      border-color: rgba(15, 23, 42, 0.16) !important;
+      transform: translateY(-1px) !important;
     }
     .devbox-header .nav a.active {
       background: #0f172a !important;
       color: #ffffff !important;
       border-color: #0f172a !important;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.18) !important;
     }
     @media (max-width: 640px) {
-      :root { --devbox-header-height: 58px; }
-      .devbox-header .nav { padding: 0 12px !important; gap: 6px !important; }
-      .devbox-header .nav a { min-height: 34px !important; padding: 0 11px !important; font-size: 12px !important; }
+      :root { --devbox-header-height: 70px; }
+      .devbox-header {
+        top: 12px !important;
+        left: 12px !important;
+        right: 12px !important;
+        justify-content: flex-start !important;
+      }
+      .devbox-header .nav {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        gap: 6px !important;
+      }
+      .devbox-header .nav a { min-height: 32px !important; padding: 0 11px !important; font-size: 12px !important; }
     }
   </style>`;
 }
