@@ -144,6 +144,9 @@ function assertHtmlResponse(response, html, name) {
   if (!html.includes('aria-label="Tool navigation"')) {
     throw new Error(`${name} is missing shared tool navigation`);
   }
+  if (!html.includes('class="devbox-header"')) {
+    throw new Error(`${name} is missing unified header wrapper`);
+  }
 }
 
 function assertNavLinks(html, expectedLinks, name) {
