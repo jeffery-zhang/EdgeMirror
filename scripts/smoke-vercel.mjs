@@ -9,6 +9,7 @@ const TOOLS = [
   { key: "docker", path: "/docker", host: "docker.w0x7ce.eu" },
   { key: "mirrors", path: "/mirrors", host: "mirrors.w0x7ce.eu" },
   { key: "proxy", path: "/proxy", host: "proxy.w0x7ce.eu" },
+  { key: "help", path: "/help", host: "box.w0x7ce.eu" },
 ];
 
 const checks = [
@@ -59,7 +60,7 @@ for (const tool of TOOLS) {
   const response = await api.default.fetch(new Request(`https://${tool.host}/`));
   const html = await response.text();
   assertHtmlResponse(response, html, `${tool.key} host page`);
-  assertNavLinks(html, TOOLS.map((item) => `https://${item.host}`), `${tool.key} host nav`);
+  assertNavLinks(html, TOOLS.map((item) => `https://box.w0x7ce.eu${item.path}`), `${tool.key} host nav`);
   console.log(`ok ${tool.key} host page nav`);
 }
 

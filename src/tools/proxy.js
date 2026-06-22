@@ -2,11 +2,9 @@ import { getToolBaseUrl, renderToolNav } from "../navigation.js";
 
 /**
  * Universal File Proxy Downloader (Safe Mode)
- * 域名: proxy.w0x7ce.eu
+ * 路径: /proxy
  * 说明: 已对敏感关键词进行拆分处理，防止 Cloudflare WAF 误判拦截
  */
-
-const MY_DOMAIN = "proxy.w0x7ce.eu";
 
 const PREFLIGHT_INIT = {
     headers: new Headers({

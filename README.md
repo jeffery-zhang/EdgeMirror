@@ -27,7 +27,7 @@
 
 ## Why DevBox Workers
 
-DevBox Workers is a single edge application that turns one repository into a fast, self-hostable developer toolbox. It keeps the Cloudflare Worker version as the primary runtime, while also shipping a Vercel Functions entry so the same codebase can be deployed from either account with one click.
+DevBox Workers is a single-domain edge application that turns one repository into a fast, self-hostable developer toolbox. The recommended production model is one public domain, such as `box.w0x7ce.eu`, with each accelerator exposed by path: `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, `/proxy`, and `/help`.
 
 Maintainer: [tianrking](https://github.com/tianrking)
 
@@ -39,7 +39,7 @@ Keywords: Cloudflare Workers proxy, Vercel Functions proxy, PyPI mirror accelera
   <img alt="Cloudflare Workers" src="https://img.shields.io/badge/Cloudflare-Workers-f38020?style=for-the-badge">
   <img alt="Vercel Functions" src="https://img.shields.io/badge/Vercel-Functions-000?style=for-the-badge">
   <img alt="JavaScript ESM" src="https://img.shields.io/badge/JavaScript-ESM-f7df1e?style=for-the-badge&labelColor=111827">
-  <img alt="Host routing" src="https://img.shields.io/badge/host-routing-2563eb?style=for-the-badge">
+  <img alt="Single domain" src="https://img.shields.io/badge/single--domain-paths-2563eb?style=for-the-badge">
   <img alt="Path routing" src="https://img.shields.io/badge/path-routing-16a34a?style=for-the-badge">
   <img alt="PyPI" src="https://img.shields.io/badge/PyPI-packages-3775a9?style=for-the-badge">
   <img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-wheels-ee4c2c?style=for-the-badge">
@@ -57,15 +57,16 @@ Keywords: Cloudflare Workers proxy, Vercel Functions proxy, PyPI mirror accelera
 
 ## Services
 
-| Service | Default host | Path prefix | What it does |
-| --- | --- | --- | --- |
-| DevBox Portal | `box.w0x7ce.eu` | `/box` | Visual dashboard and usage snippets for every tool |
-| PyPI / PyTorch | `pypi.w0x7ce.eu` | `/pypi` | PyPI simple index, package files, and PyTorch wheel proxy |
-| Hugging Face | `hf.w0x7ce.eu` | `/hf` | Hugging Face API and LFS download forwarding |
-| GitHub | `github.w0x7ce.eu` | `/github` | Git clone, raw file, release asset, and page proxy |
-| Docker Registry | `docker.w0x7ce.eu` | `/docker` | Docker Hub plus `quay`, `gcr`, `k8s`, `ghcr`, `nvcr` prefixes |
-| Linux Mirrors | `mirrors.w0x7ce.eu` | `/mirrors` | Pass-through mirror proxy for APT, YUM, DNF, Pacman, wget, curl |
-| Universal Proxy | `proxy.w0x7ce.eu` | `/proxy` | Universal URL forwarding and attachment filename handling |
+| Service | Single-domain route | What it does |
+| --- | --- | --- |
+| DevBox Portal | `/` or `/box` | Visual dashboard and usage snippets for every tool |
+| Help | `/help` | Beautiful route map, web usage, CLI recipes, and configuration guide |
+| PyPI / PyTorch | `/pypi` | PyPI simple index, package files, and PyTorch wheel proxy |
+| Hugging Face | `/hf` | Hugging Face API and LFS download forwarding |
+| GitHub | `/github` | Git clone, raw file, release asset, and page proxy |
+| Docker Registry | `/docker` UI, `/v2` API | Docker Hub plus `quay`, `gcr`, `k8s`, `ghcr`, `nvcr` prefixes |
+| Linux Mirrors | `/mirrors` | Pass-through mirror proxy for APT, YUM, DNF, Pacman, wget, curl |
+| Universal Proxy | `/proxy` | Universal URL forwarding and attachment filename handling |
 
 ## One-Click Deployment
 
@@ -77,7 +78,7 @@ Click the Cloudflare button at the top of this README, or open:
 https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/box-tools
 ```
 
-Cloudflare reads `wrangler.toml`, creates the Worker, and applies the configured Worker settings. Custom domains in `wrangler.toml` must already belong to the Cloudflare account that deploys the project.
+Cloudflare reads `wrangler.toml`, creates the Worker, and applies the configured Worker settings. The default configuration binds one custom domain, `box.w0x7ce.eu`, and every tool is served from that domain by path.
 
 ### Deploy to Vercel
 
@@ -87,7 +88,7 @@ Click the Vercel button at the top of this README, or open:
 https://vercel.com/new/clone?repository-url=https://github.com/tianrking/box-tools
 ```
 
-Vercel uses `api/index.js` as a Web Handler function and `vercel.json` to route every path to that function. On a single Vercel domain, use path prefixes like `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, and `/proxy`. Docker Registry API traffic is also auto-detected at `/v2`, `/token`, and `/_worker_blob_proxy`, so a single Vercel domain can serve Docker pulls without a `/docker` prefix in the image name.
+Vercel uses `api/index.js` as a Web Handler function and `vercel.json` to route every path to that function. The Vercel deployment uses the same path model: `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, `/proxy`, and `/help`. Docker Registry API traffic is also auto-detected at `/v2`, `/token`, and `/_worker_blob_proxy`, so a single Vercel domain can serve Docker pulls without a `/docker` prefix in the image name.
 
 ## Local Development
 
@@ -112,12 +113,12 @@ Useful scripts:
 
 ## Routing Model
 
-DevBox Workers supports two routing styles:
+DevBox Workers is designed around single-domain path routing:
 
 | Runtime style | Example | Notes |
 | --- | --- | --- |
-| Host routing | `https://pypi.w0x7ce.eu/simple/` | Best for Cloudflare custom domains |
-| Path routing | `https://your-worker.workers.dev/pypi/simple/` | Best for local dev and single-domain Vercel deployments |
+| Path routing | `https://box.w0x7ce.eu/pypi/simple/` | Recommended production model |
+| Vercel path routing | `https://your-app.vercel.app/pypi/simple/` | Same routes after one-click Vercel deploy |
 
 For Docker on a single-domain deployment, use the deployment host directly:
 
@@ -142,38 +143,38 @@ They return JSON with the project version and the registered service list.
 Install a Python package:
 
 ```bash
-pip install numpy -i https://pypi.w0x7ce.eu/simple/
+pip install numpy -i https://box.w0x7ce.eu/pypi/simple/
 ```
 
 Install PyTorch wheels:
 
 ```bash
-pip install torch torchvision --index-url https://pypi.w0x7ce.eu/pytorch/cu118
+pip install torch torchvision --index-url https://box.w0x7ce.eu/pypi/pytorch/cu118
 ```
 
 Download a Hugging Face model:
 
 ```bash
-export HF_ENDPOINT=https://hf.w0x7ce.eu
+export HF_ENDPOINT=https://box.w0x7ce.eu/hf
 huggingface-cli download gpt2
 ```
 
 Clone through the GitHub proxy:
 
 ```bash
-git clone https://github.w0x7ce.eu/tianrking/box-tools.git
+git clone https://box.w0x7ce.eu/github/tianrking/box-tools.git
 ```
 
 Pull a Docker image:
 
 ```bash
-docker pull docker.w0x7ce.eu/library/nginx:latest
+docker pull box.w0x7ce.eu/library/nginx:latest
 ```
 
 Proxy a generic file:
 
 ```bash
-curl -L -O "https://proxy.w0x7ce.eu/proxy/https://example.com/file.zip"
+curl -L -O "https://box.w0x7ce.eu/proxy/https://example.com/file.zip"
 ```
 
 ## Project Layout
@@ -192,16 +193,16 @@ wrangler.toml             Cloudflare Workers configuration
 
 ## Configuration
 
-Edit `src/config.js` when adding, renaming, or documenting a tool. Edit `wrangler.toml` when changing Cloudflare Worker names, compatibility dates, or custom domains.
+Edit `src/config.js` when adding, renaming, or documenting a tool. Edit `wrangler.toml` when changing the Cloudflare Worker name, compatibility date, or primary custom domain.
 
-For Vercel custom domains, add the domains in the Vercel dashboard. The same host router will work when Vercel receives traffic for a configured service host.
+For Vercel custom domains, add one primary domain in the Vercel dashboard and keep the same path routes.
 
 ## Production Notes
 
 - Keep `npm run verify` green before deploying.
 - Keep `wrangler` updated; it is the local Cloudflare dev/deploy toolchain.
 - Cloudflare custom domains in `wrangler.toml` are account-specific.
-- Vercel deployments use path routing unless you configure matching custom domains.
+- Use one primary domain for the public product experience; legacy per-tool hosts are not the recommended interaction model.
 - Some upstream services may have rate limits, authentication requirements, or terms of service that still apply through a proxy.
 
 ## Roadmap

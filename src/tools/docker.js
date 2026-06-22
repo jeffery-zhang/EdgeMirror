@@ -2,7 +2,7 @@ import { getDockerRegistryHost, getToolBaseUrl, renderToolNav } from "../navigat
 
 /**
  * Docker Proxy Accelerator (Ultimate Edition)
- * 域名: docker.w0x7ce.eu
+ * 路径: /docker UI, /v2 registry API
  * 功能: 
  * 1. 修复 AWS S3 签名错误 (Blob Proxy)
  * 2. 自动补全 library (nginx -> library/nginx)

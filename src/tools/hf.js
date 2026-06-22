@@ -2,15 +2,13 @@ import { getToolBaseUrl, renderToolNav } from "../navigation.js";
 
 /**
  * Hugging Face Proxy Accelerator (Ultimate Light Edition)
- * 域名: hf.w0x7ce.eu
+ * 路径: /hf
  * 功能: 
  * 1. 智能鉴权 (Llama 2 403修复)
  * 2. 兼容 hf_transfer (Content-Length透传)
  * 3. 修复 API 500 错误
  * 4. 顶部导航栏 + 亮色粒子UI + 完整Footer
  */
-
-const MY_DOMAIN = "hf.w0x7ce.eu"; 
 
 const UPSTREAM_URL = "https://huggingface.co";
 const UPSTREAM_LFS = "https://cdn-lfs.huggingface.co";

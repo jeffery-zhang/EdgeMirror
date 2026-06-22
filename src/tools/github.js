@@ -3,12 +3,10 @@ import { getToolBaseUrl, renderToolNav } from "../navigation.js";
 
 /**
  * GitHub Proxy Accelerator (Modern Edition + Nav)
- * 域名: github.w0x7ce.eu
+ * 路径: /github
  * 作者: w0x7ce
  * 风格: GitHub Light + 现代粒子交互 + 毛玻璃特效 + 胶囊导航
  */
-
-const MY_DOMAIN = "github.w0x7ce.eu";
 
 export default {
   async fetch(request, env, ctx) {

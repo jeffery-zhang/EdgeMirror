@@ -1,7 +1,8 @@
 import box from "./tools/box.js";
-import { HEALTH_PATHS, PROJECT, TOOL_DEFINITIONS } from "./config.js";
+import { HEALTH_PATHS, HELP_DEFINITION, PROJECT, TOOL_DEFINITIONS } from "./config.js";
 import docker from "./tools/docker.js";
 import github from "./tools/github.js";
+import help from "./tools/help.js";
 import hf from "./tools/hf.js";
 import mirrors from "./tools/mirrors.js";
 import proxy from "./tools/proxy.js";
@@ -12,6 +13,7 @@ const HANDLERS = new Map([
   ["pypi", pypi],
   ["hf", hf],
   ["github", github],
+  ["help", help],
   ["docker", docker],
   ["mirrors", mirrors],
   ["proxy", proxy],
@@ -24,6 +26,7 @@ const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
 
 const HOST_ROUTES = new Map(TOOLS.map((tool) => [tool.host, tool]));
 const PATH_ROUTES = new Map(TOOLS.map((tool) => [tool.key, tool]));
+PATH_ROUTES.set("help", { key: "help", handler: help });
 
 export default {
   async fetch(request, env, ctx) {
@@ -34,13 +37,15 @@ export default {
         status: "ok",
         service: PROJECT.name,
         version: PROJECT.version,
+        primaryHost: PROJECT.primaryHost,
         hostname: url.hostname,
-        tools: TOOL_DEFINITIONS.map(({ key, title, host, description }) => ({
+        tools: TOOL_DEFINITIONS.map(({ key, title, path, description }) => ({
           key,
           title,
-          host,
+          path,
           description,
         })),
+        pages: [HELP_DEFINITION],
       });
     }
 

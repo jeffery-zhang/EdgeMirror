@@ -2,13 +2,11 @@ import { getToolBaseUrl, renderToolNav } from "../navigation.js";
 
 /**
  * Universal Linux Mirrors Proxy (Light & Fresh Edition)
- * 域名: mirrors.w0x7ce.eu
+ * 路径: /mirrors
  * 模式: 纯粹透传 (Pass-through)
  * 适配: APT, YUM, DNF, Pacman, Wget, Curl, Browser
  * 风格: 亮色紫罗兰 + 粒子特效
  */
-
-const MY_DOMAIN = "mirrors.w0x7ce.eu"; 
 
 // 预检请求配置
 const PREFLIGHT_INIT = {
@@ -43,7 +41,7 @@ export default {
 
         // 格式校验
         if (!targetUrlStr.startsWith("http")) {
-            return new Response("Invalid URL format. Usage: https://" + MY_DOMAIN + "/https://target.com/file", { status: 400 });
+            return new Response(`Invalid URL format. Usage: ${workerUrl}/https://target.com/file`, { status: 400 });
         }
 
         try {

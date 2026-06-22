@@ -2,7 +2,7 @@ import { getDockerRegistryHost, getToolBaseUrl, renderToolNav } from "../navigat
 
 /**
  * Developer Toolbox Portal (Elegant & Spacious Edition)
- * 域名: box.w0x7ce.eu
+ * 路径: / and /box
  * 特性: 大尺寸卡片 + 呼吸感交互 + 详情模态框
  */
 
@@ -23,6 +23,7 @@ function htmlPage(request) {
         docker: getToolBaseUrl(request, "docker"),
         mirrors: getToolBaseUrl(request, "mirrors"),
         proxy: getToolBaseUrl(request, "proxy"),
+        help: getToolBaseUrl(request, "help"),
     };
     const dockerRegistryHost = getDockerRegistryHost(request);
     const proxyDownloadBaseUrl = urls.proxy.endsWith("/proxy") ? urls.proxy : `${urls.proxy}/proxy`;
@@ -50,6 +51,7 @@ function htmlPage(request) {
             --c-github: #2da44e;
             --c-docker: #0db7ed;
             --c-proxy: #d946ef;
+            --c-help: #0f172a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; outline: none; }
@@ -331,6 +333,19 @@ function htmlPage(request) {
             <div class="action-area" onclick="event.stopPropagation()">
                 <div class="cmd-preview">wget / curl -O ...</div>
                 <button class="action-btn" onclick="openModal('proxy')">View Details</button>
+            </div>
+        </div>
+
+        <div class="card" onclick="window.location.href='${urls.help}'" style="--color: var(--c-help)">
+            <div class="card-header">
+                <div class="icon"><svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2Zm1-16A10 10 0 1 0 22 12 10.01 10.01 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8.01 8.01 0 0 1-8 8Zm0-14a3.5 3.5 0 0 0-3.5 3.5h2A1.5 1.5 0 1 1 12 11c-1.13 0-2 .87-2 2v1h2v-1c0-.28.22-.5.5-.5A3.5 3.5 0 0 0 12 6Z"/></svg></div>
+                <div class="arrow-icon">→</div>
+            </div>
+            <div class="title">Help Center</div>
+            <div class="desc">单域名路径玩法、网页入口、命令行用法、工具配置和部署说明都在这里。</div>
+            <div class="action-area" onclick="event.stopPropagation()">
+                <div class="cmd-preview">${urls.help}</div>
+                <button class="action-btn" onclick="window.location.href='${urls.help}'">Open Help</button>
             </div>
         </div>
 

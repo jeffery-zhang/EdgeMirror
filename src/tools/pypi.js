@@ -3,15 +3,13 @@ import { getToolBaseUrl, renderToolNav } from "../navigation.js";
 
 /**
  * Python Universal Proxy (PyPI + PyTorch + Nav)
- * 域名: pypi.w0x7ce.eu
+ * 路径: /pypi
  * 功能: 
  * 1. 标准 PyPI 加速 (/simple/)
  * 2. PyTorch 专用加速 (/pytorch/)
  * 3. 顶部导航栏互联
  * 4. 粒子特效 UI
  */
-
-const MY_DOMAIN = "pypi.w0x7ce.eu"; // 仅用于 UI 显示
 
 // 1. 上游配置
 const UPSTREAM_PYPI_INDEX = "https://pypi.org";
