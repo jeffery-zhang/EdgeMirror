@@ -1,3 +1,5 @@
+import { hasNativeHtmlRewriter, rewriteHtmlAttributes, rewriteHtmlResponse } from "../html.js";
+
 /**
  * GitHub Proxy Accelerator (Modern Edition + Nav)
  * 域名: github.w0x7ce.eu
@@ -77,6 +79,9 @@ async function handleRequest(request) {
     // 6. 网页浏览优化 (HTMLRewriter)
     const contentType = response.headers.get("Content-Type");
     if (contentType && contentType.includes("text/html")) {
+      if (!hasNativeHtmlRewriter()) {
+        return rewriteHtmlResponse(response, (html) => rewriteHtmlForNode(html, url.origin));
+      }
       return rewriter(url.origin).transform(response);
     }
 
@@ -118,6 +123,30 @@ function rewriter(workerOrigin) {
     .on("img", new AttributeRewriter("src", workerOrigin))
     .on("link", new AttributeRewriter("href", workerOrigin))
     .on("script", new AttributeRewriter("src", workerOrigin));
+}
+
+function rewriteHtmlForNode(html, workerOrigin) {
+  return rewriteHtmlAttributes(html, (attribute, value) => {
+    if (
+      !value ||
+      value.startsWith("#") ||
+      value.startsWith("javascript:") ||
+      value.startsWith("data:") ||
+      value.startsWith("mailto:")
+    ) {
+      return value;
+    }
+
+    if (value.startsWith("http://") || value.startsWith("https://")) {
+      return `${workerOrigin}/${value}`;
+    }
+
+    if (value.startsWith("/")) {
+      return `${workerOrigin}/https://github.com${value}`;
+    }
+
+    return value;
+  });
 }
 
 // -----------------------------------------------------------

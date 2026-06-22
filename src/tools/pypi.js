@@ -1,3 +1,5 @@
+import { hasNativeHtmlRewriter, rewriteHtmlResponse } from "../html.js";
+
 /**
  * Python Universal Proxy (PyPI + PyTorch + Nav)
  * 域名: pypi.w0x7ce.eu
@@ -99,6 +101,11 @@ async function proxyPytorch(request, targetUrlStr, workerUrl) {
     
     // 如果是 HTML 目录，重写里面的绝对链接 (如果有的话)
     if (contentType.includes("text/html")) {
+        if (!hasNativeHtmlRewriter()) {
+            return rewriteHtmlResponse(response, (html) =>
+                html.replaceAll("https://download.pytorch.org/whl", `${workerUrl}/pytorch`)
+            );
+        }
         return new HTMLRewriter()
             .on("a", new PytorchLinkRewriter(workerUrl))
             .transform(response);
@@ -135,6 +142,11 @@ async function proxyPyPiIndex(request, upstream, workerUrl) {
 
     // HTML 处理 (旧版 pip/浏览器)
     if (contentType.includes("text/html")) {
+        if (!hasNativeHtmlRewriter()) {
+            return rewriteHtmlResponse(response, (html) =>
+                html.replaceAll("https://files.pythonhosted.org", workerUrl)
+            );
+        }
         return new HTMLRewriter()
             .on("a", new PyPiLinkRewriter(workerUrl))
             .transform(response);

@@ -5,8 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
+    "dev:cloudflare": "wrangler dev",
+    "dev:vercel": "npx vercel@latest dev",
     "deploy": "wrangler deploy",
-    "check": "node scripts/check-syntax.mjs"
+    "deploy:cloudflare": "wrangler deploy",
+    "deploy:vercel": "npx vercel@latest --prod",
+    "check": "node scripts/check-syntax.mjs",
+    "smoke:vercel": "node scripts/smoke-vercel.mjs",
+    "verify": "npm run check && npm run smoke:vercel && npm audit --audit-level=high"
   },
   "devDependencies": {
     "wrangler": "^4.103.0"
