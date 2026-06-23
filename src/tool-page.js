@@ -41,7 +41,7 @@ export function renderAcceleratorPage({
   title,
   pageTitle,
 }) {
-  const ui = UI_COPY[lang] ?? UI_COPY.en;
+  const ui = normalizeUiCopy(lang, UI_COPY[lang] ?? UI_COPY.en);
   const primaryCard = primaryCommand ?? cards[0];
 
   return `<!doctype html>
@@ -100,6 +100,19 @@ export function renderAcceleratorPage({
   </script>
 </body>
 </html>`;
+}
+
+function normalizeUiCopy(lang, ui) {
+  if (lang !== "zh") return ui;
+  return {
+    ...ui,
+    quickStart: "快速开始",
+    examples: "使用示例",
+    statusStable: "稳定加速器",
+    statusTest: "测试加速器",
+    copy: "复制",
+    copied: "已复制",
+  };
 }
 
 function commandCard(card, ui) {

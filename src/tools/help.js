@@ -254,7 +254,7 @@ export default {
 
 function htmlPage(request) {
   const lang = getLanguage(request);
-  const copy = COPY[lang] ?? COPY.en;
+  const copy = normalizeHelpCopy(lang, COPY[lang] ?? COPY.en);
   const htmlLang = LANGUAGES[lang]?.htmlLang ?? "en";
   const urls = Object.fromEntries(TOOL_DEFINITIONS.map((tool) => [tool.key, getToolBaseUrl(request, tool.key)]));
   const dockerHost = getDockerRegistryHost(request);
@@ -466,6 +466,8 @@ function htmlPage(request) {
       color: #d1fae5;
       font-size: 13px;
       line-height: 1.62;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
     code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
     .note { margin-top: 14px; color: var(--muted); line-height: 1.6; }
@@ -676,25 +678,14 @@ function htmlPage(request) {
       .action-link {
         flex: 1 1 130px;
       }
-      .hero-panel { padding: 12px; gap: 8px; }
-      .hero-panel {
-        display: flex;
-        overflow-x: auto;
-        scrollbar-width: none;
-      }
-      .hero-panel::-webkit-scrollbar {
-        display: none;
-      }
-      .metric {
-        flex: 0 0 156px;
-      }
+      .hero-panel { padding: 12px; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .metric strong {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .metric:nth-child(4), .metric:nth-child(5) {
-        grid-column: auto;
+        grid-column: 1 / -1;
       }
       .metric {
         padding: 10px 0;
@@ -781,12 +772,12 @@ function htmlPage(request) {
         <table class="route-table">
           <thead><tr><th>${escapeHtml(copy.thStatus)}</th><th>${escapeHtml(copy.thService)}</th><th>${escapeHtml(copy.thEntry)}</th><th>${escapeHtml(copy.thUsage)}</th></tr></thead>
           <tbody>
-            ${SERVICES.map(([status, name, key, descriptions]) => routeRow(status, copy, name, urls[key], descriptions[lang] ?? descriptions.en)).join("")}
+            ${SERVICES.map(([status, name, key, descriptions]) => routeRow(status, copy, name, urls[key], serviceDescription(key, descriptions, lang))).join("")}
           </tbody>
         </table>
       </div>
       <div class="route-cards">
-        ${SERVICES.map(([status, name, key, descriptions]) => routeCard(status, copy, name, urls[key], descriptions[lang] ?? descriptions.en)).join("")}
+        ${SERVICES.map(([status, name, key, descriptions]) => routeCard(status, copy, name, urls[key], serviceDescription(key, descriptions, lang))).join("")}
       </div>
       <div class="empty-state" id="routeEmpty">${escapeHtml(copy.noRouteResults)}</div>
       <p class="note">${escapeHtml(copy.testNote)}</p>
@@ -889,6 +880,84 @@ function htmlPage(request) {
   </script>
 </body>
 </html>`;
+}
+
+function normalizeHelpCopy(lang, copy) {
+  if (lang !== "zh") return copy;
+  return {
+    ...copy,
+    metaDescription: "DevBox Workers 帮助页：单域名路径、网页入口、命令行用法、包管理配置、Docker registry 用法和部署说明。",
+    eyebrow: "DevBox Workers 帮助",
+    title: "一个域名，所有加速入口。",
+    lead: "把 DevBox Workers 当作单域名边缘工具箱使用。你可以打开网页生成命令，也可以把路径写入包管理器、命令行工具、Docker 和下载工具。",
+    quickTitle: "快速开始",
+    servicesLabel: "服务数量",
+    stableRoutes: "Stable 路由",
+    testRoutes: "Test 路由",
+    openPortal: "打开总入口",
+    routeSearch: "搜索服务、路径或用法",
+    allRoutes: "全部",
+    stableOnly: "Stable",
+    testOnly: "Test",
+    allCommands: "全部命令",
+    stableCommands: "Stable",
+    testCommands: "Test",
+    deployCommands: "部署",
+    copy: "复制",
+    copied: "已复制",
+    open: "打开",
+    noRouteResults: "没有匹配的路由。",
+    primaryDomain: "主域名",
+    runtime: "运行时",
+    health: "健康检查",
+    stable: "Stable",
+    test: "Test",
+    testNote: "Test 路由已经实现并接入 smoke test，但建议在自己的工作流里验证后再提升为稳定用法。",
+    webTitle: "网页怎么用",
+    webHint: "工具名字保持英文，说明和使用方式会跟随当前选择的语言。",
+    portalTitle: "入口面板",
+    portalText: "从主面板进入，快速浏览所有加速器，并打开你需要的专属工具页面。",
+    pathTitle: "单域名路径",
+    pathText: "所有加速器都在同一个域名下，通过不同路径区分服务，适合 Cloudflare Workers 和 Vercel 部署。",
+    cliTitle: "命令行友好",
+    cliText: "pip、huggingface-cli、git、docker、npm、go、cargo、wget、curl 都可以直接使用生成的 URL。",
+    routeTitle: "路由矩阵",
+    routeHint: "这是当前部署环境下的实际入口。",
+    thStatus: "状态",
+    thService: "服务",
+    thEntry: "入口",
+    thUsage: "可加速资源",
+    commandTitle: "命令行示例",
+    commandHint: "命令会根据当前域名生成，复制后替换包名、模型名或文件 URL 即可。",
+    copyHint: "复制后修改",
+    deployTitle: "配置和部署",
+    deployHint: "你可以直接使用网页，也可以把路径写进工具配置里长期使用。",
+    cloudflareTitle: "先部署，再绑定域名",
+    cloudflareText: "默认 wrangler.toml 适合一键部署到任意 Cloudflare 账户。只有确认域名属于目标账户后，再参考 wrangler.custom-domain.example.toml 绑定自定义域名。",
+    vercelTitle: "Vercel 一键部署",
+    vercelText: "vercel.json 会把所有路径转给 api/index.js，同一套路由模型可以直接用于 Vercel 域名。",
+    verifyTitle: "上线前验证",
+    verifyText: "部署前运行 npm run verify。它会检查 JavaScript 语法、页面导航、Vercel 路由、Docker API 路由和高危 npm audit。",
+  };
+}
+
+const SERVICE_ZH = {
+  pypi: "PyPI simple index、Python 包和 PyTorch wheel。",
+  hf: "模型、数据集、API 请求和 LFS 大文件下载。",
+  github: "Git clone、Raw 文件、Release 资源和 GitHub 页面。",
+  docker: "Docker Hub 和多镜像仓库拉取，通过当前域名的 /v2 使用。",
+  mirrors: "APT、YUM、DNF、Pacman、wget、curl 的软件源路径。",
+  proxy: "任意 HTTP/HTTPS 文件 URL，带重定向和文件名处理。",
+  npm: "npm、pnpm、yarn metadata 和 tarball 下载。",
+  go: "GOPROXY module metadata、.mod 和 .zip 文件。",
+  maven: "Maven Central、Google Maven、Gradle Plugin Portal、JitPack。",
+  crates: "Cargo sparse index 和 crate 包下载。",
+  downloads: "运行时、Open VSX、SourceForge、GitLab、Gitea 和直接 URL 文件。",
+};
+
+function serviceDescription(key, descriptions, lang) {
+  if (lang === "zh" && SERVICE_ZH[key]) return SERVICE_ZH[key];
+  return descriptions[lang] ?? descriptions.en;
 }
 
 function infoCard(label, title, text, color = "") {

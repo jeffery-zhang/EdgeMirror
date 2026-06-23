@@ -21,7 +21,7 @@ const PAGE_IDENTITY = new Map([
   ["box", "Stable accelerators"],
   ["pypi", "PyTorch"],
   ["hf", "Model hub accelerator"],
-  ["github", "GitHub 加速通道"],
+  ["github", "GitHub"],
   ["docker", "Docker Proxy Accelerator"],
   ["mirrors", "Linux repository accelerator"],
   ["proxy", "Universal File Fetcher"],
@@ -45,14 +45,12 @@ const checks = [
   {
     name: "portal path route",
     request: new Request(`${BASE_URL}/box`),
-    assert: async (response) =>
-      response.status === 200 && response.headers.get("content-type")?.includes("text/html"),
+    assert: async (response) => response.status === 200 && response.headers.get("content-type")?.includes("text/html"),
   },
   {
     name: "github path route",
     request: new Request(`${BASE_URL}/github`),
-    assert: async (response) =>
-      response.status === 200 && response.headers.get("content-type")?.includes("text/html"),
+    assert: async (response) => response.status === 200 && response.headers.get("content-type")?.includes("text/html"),
   },
   {
     name: "docker registry route detection",
