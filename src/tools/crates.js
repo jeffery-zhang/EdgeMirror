@@ -88,7 +88,7 @@ function renderPage(request, baseUrl) {
     cards: [
       {
         title: ".cargo/config.toml",
-        command: `[source.crates-io]\nreplace-with = "devbox"\n\n[source.devbox]\nregistry = "sparse+${baseUrl}/"`,
+        command: `[source.crates-io]\nreplace-with = "edgemirror"\n\n[source.edgemirror]\nregistry = "sparse+${baseUrl}/"`,
       },
       { title: copy.env, command: "CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo fetch" },
       { title: copy.testIndex, command: `${baseUrl}/config.json` },
@@ -101,7 +101,7 @@ function renderPage(request, baseUrl) {
     lang,
     nav,
     note: copy.note,
-    pageTitle: "Crates Proxy | DevBox Workers",
+    pageTitle: "Crates Proxy | EdgeMirror",
     status: "test",
     title: "crates.io Sparse Proxy",
   });

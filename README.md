@@ -2,38 +2,42 @@
   <strong>English</strong> | <a href="README.es.md">Español</a> | <a href="README.zh-CN.md">中文</a>
 </p>
 
-<h1 align="center">DevBox Workers</h1>
+<h1 align="center">EdgeMirror</h1>
 
 <p align="center">
-  A production-ready developer accelerator toolbox for PyPI, PyTorch, Hugging Face, GitHub, Docker registries, Linux mirrors, npm, Go modules, Maven, crates.io, runtime downloads, and universal file forwarding.
+  A CDN-style edge mirror gateway for developer sources.
 </p>
 
 <p align="center">
-  <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/box-tools">
+  Accelerate PyPI, PyTorch, Hugging Face, GitHub, Docker registries, Linux mirrors, npm, Go modules, Maven, crates.io, runtime downloads, and universal file forwarding behind one clean domain.
+</p>
+
+<p align="center">
+  <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/edgemirror">
     <img alt="Deploy to Cloudflare" src="https://img.shields.io/badge/Deploy%20to-Cloudflare-f38020?style=for-the-badge&logo=cloudflare&logoColor=white&labelColor=111827">
   </a>
-  <a href="https://vercel.com/new/clone?repository-url=https://github.com/tianrking/box-tools">
+  <a href="https://vercel.com/new/clone?repository-url=https://github.com/tianrking/edgemirror">
     <img alt="Deploy with Vercel" src="https://img.shields.io/badge/Deploy%20with-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white&labelColor=111827">
   </a>
 </p>
 
 <p align="center">
-  <img alt="Verify" src="https://img.shields.io/github/actions/workflow/status/tianrking/box-tools/verify.yml?branch=main&style=for-the-badge&label=verify">
+  <img alt="Verify" src="https://img.shields.io/github/actions/workflow/status/tianrking/edgemirror/verify.yml?branch=main&style=for-the-badge&label=verify">
   <img alt="Runtime" src="https://img.shields.io/badge/runtime-Cloudflare%20Workers%20%7C%20Vercel%20Functions-0f172a?style=for-the-badge">
   <img alt="Language" src="https://img.shields.io/badge/language-JavaScript%20ESM-f7df1e?style=for-the-badge&labelColor=111827">
   <img alt="Package manager" src="https://img.shields.io/badge/package-npm-cb3837?style=for-the-badge">
   <img alt="Maintainer" src="https://img.shields.io/badge/maintainer-tianrking-2563eb?style=for-the-badge">
 </p>
 
-## Why DevBox Workers
+## Why EdgeMirror
 
-DevBox Workers is a single-domain edge application that turns one repository into a fast, self-hostable developer toolbox. The recommended production model is one public domain, such as `box.w0x7ce.eu`, with each accelerator exposed by path: `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, `/proxy`, `/npm`, `/go`, `/maven`, `/crates`, `/downloads`, and `/help`.
+EdgeMirror is a single-domain edge mirror gateway for common developer sources. The recommended production model is one public domain, such as `edgemirror.w0x7ce.eu`, with each source accelerator exposed by path: `/edgemirror`, `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, `/proxy`, `/npm`, `/go`, `/maven`, `/crates`, `/downloads`, and `/help`.
 
 Every page includes a shared language switcher for English, Spanish, and Chinese. Tool names stay in English while explanations, usage notes, and common UI labels follow the selected language.
 
 Maintainer: [tianrking](https://github.com/tianrking)
 
-Keywords: Cloudflare Workers proxy, Vercel Functions proxy, PyPI mirror accelerator, PyTorch wheel proxy, Hugging Face mirror, Docker registry proxy, GitHub raw proxy, Linux mirror proxy, npm registry proxy, Go module proxy, Maven proxy, Gradle mirror, crates.io sparse registry proxy, runtime download accelerator, developer toolbox.
+Keywords: edge mirror gateway, CDN-style source acceleration, Cloudflare Workers proxy, Vercel Functions proxy, PyPI mirror accelerator, PyTorch wheel proxy, Hugging Face mirror, Docker registry proxy, GitHub raw proxy, Linux mirror proxy, npm registry proxy, Go module proxy, Maven proxy, Gradle mirror, crates.io sparse registry proxy, runtime download accelerator.
 
 ## Tool Stack
 
@@ -68,7 +72,7 @@ Keywords: Cloudflare Workers proxy, Vercel Functions proxy, PyPI mirror accelera
 
 | Status | Service | Single-domain route | What it accelerates |
 | --- | --- | --- | --- |
-| Stable | DevBox Portal | `/` or `/box` | Visual dashboard and usage snippets for every tool |
+| Stable | EdgeMirror Portal | `/` or `/edgemirror` | Visual dashboard and usage snippets for every source accelerator |
 | Stable | Help | `/help` | Route map, web usage, CLI recipes, and configuration guide in English, Spanish, and Chinese |
 | Stable | PyPI / PyTorch | `/pypi` | PyPI simple index, package files, and PyTorch wheel downloads |
 | Stable | Hugging Face | `/hf` | Hugging Face API, model files, datasets, and LFS downloads |
@@ -89,7 +93,7 @@ Keywords: Cloudflare Workers proxy, Vercel Functions proxy, PyPI mirror accelera
 Click the Cloudflare button at the top of this README, or open:
 
 ```text
-https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/box-tools
+https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/edgemirror
 ```
 
 Cloudflare reads `wrangler.toml`, creates the Worker, and deploys it to the account-provided Worker name. The default configuration is intentionally portable: it enables `workers.dev`, disables preview URLs, and does not bind the maintainer's custom domain.
@@ -101,10 +105,10 @@ After the Worker is deployed, add one custom domain in the Cloudflare dashboard,
 Click the Vercel button at the top of this README, or open:
 
 ```text
-https://vercel.com/new/clone?repository-url=https://github.com/tianrking/box-tools
+https://vercel.com/new/clone?repository-url=https://github.com/tianrking/edgemirror
 ```
 
-Vercel uses `api/index.js` as a Web Handler function and `vercel.json` to route every path to that function. The Vercel deployment uses the same path model: `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, `/proxy`, `/npm`, `/go`, `/maven`, `/crates`, `/downloads`, and `/help`. Docker Registry API traffic is also auto-detected at `/v2`, `/token`, and `/_worker_blob_proxy`, so a single Vercel domain can serve Docker pulls without a `/docker` prefix in the image name.
+Vercel uses `api/index.js` as a Web Handler function and `vercel.json` to route every path to that function. The Vercel deployment uses the same path model: `/edgemirror`, `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, `/proxy`, `/npm`, `/go`, `/maven`, `/crates`, `/downloads`, and `/help`. Docker Registry API traffic is also auto-detected at `/v2`, `/token`, and `/_worker_blob_proxy`, so a single Vercel domain can serve Docker pulls without a `/docker` prefix in the image name.
 
 ## Local Development
 
@@ -129,11 +133,11 @@ Useful scripts:
 
 ## Routing Model
 
-DevBox Workers is designed around single-domain path routing:
+EdgeMirror is designed around single-domain path routing:
 
 | Runtime style | Example | Notes |
 | --- | --- | --- |
-| Path routing | `https://box.w0x7ce.eu/pypi/simple/` | Recommended production model |
+| Path routing | `https://edgemirror.w0x7ce.eu/pypi/simple/` | Recommended production model |
 | Vercel path routing | `https://your-app.vercel.app/pypi/simple/` | Same routes after one-click Vercel deploy |
 
 For Docker on a single-domain deployment, use the deployment host directly:
@@ -159,60 +163,60 @@ They return JSON with the project version and the registered service list.
 Install a Python package:
 
 ```bash
-pip install numpy -i https://box.w0x7ce.eu/pypi/simple/
+pip install numpy -i https://edgemirror.w0x7ce.eu/pypi/simple/
 ```
 
 Install PyTorch wheels:
 
 ```bash
-pip install torch torchvision --index-url https://box.w0x7ce.eu/pypi/pytorch/cu118
+pip install torch torchvision --index-url https://edgemirror.w0x7ce.eu/pypi/pytorch/cu118
 ```
 
 Download a Hugging Face model:
 
 ```bash
-export HF_ENDPOINT=https://box.w0x7ce.eu/hf
+export HF_ENDPOINT=https://edgemirror.w0x7ce.eu/hf
 huggingface-cli download gpt2
 ```
 
 Clone through the GitHub proxy:
 
 ```bash
-git clone https://box.w0x7ce.eu/github/vercel/next.js.git
+git clone https://edgemirror.w0x7ce.eu/github/vercel/next.js.git
 ```
 
 Pull a Docker image:
 
 ```bash
-docker pull box.w0x7ce.eu/library/nginx:latest
+docker pull edgemirror.w0x7ce.eu/library/nginx:latest
 ```
 
 Proxy a generic file:
 
 ```bash
-curl -L -O "https://box.w0x7ce.eu/proxy/https://nodejs.org/dist/v22.11.0/node-v22.11.0-x64.msi"
+curl -L -O "https://edgemirror.w0x7ce.eu/proxy/https://nodejs.org/dist/v22.11.0/node-v22.11.0-x64.msi"
 ```
 
 Use the new test npm registry route:
 
 ```bash
-npm install lodash --registry=https://box.w0x7ce.eu/npm/
-pnpm install lodash --registry=https://box.w0x7ce.eu/npm/
+npm install lodash --registry=https://edgemirror.w0x7ce.eu/npm/
+pnpm install lodash --registry=https://edgemirror.w0x7ce.eu/npm/
 ```
 
 Use the new test Go module route:
 
 ```bash
-go env -w GOPROXY=https://box.w0x7ce.eu/go,direct
+go env -w GOPROXY=https://edgemirror.w0x7ce.eu/go,direct
 ```
 
 Use the new test Maven / Gradle routes:
 
 ```kotlin
 repositories {
-    maven { url = uri("https://box.w0x7ce.eu/maven/maven-central") }
-    maven { url = uri("https://box.w0x7ce.eu/maven/google") }
-    maven { url = uri("https://box.w0x7ce.eu/maven/gradle-plugin") }
+    maven { url = uri("https://edgemirror.w0x7ce.eu/maven/maven-central") }
+    maven { url = uri("https://edgemirror.w0x7ce.eu/maven/google") }
+    maven { url = uri("https://edgemirror.w0x7ce.eu/maven/gradle-plugin") }
 }
 ```
 
@@ -220,17 +224,17 @@ Use the new test crates.io sparse route:
 
 ```toml
 [source.crates-io]
-replace-with = "devbox"
+replace-with = "edgemirror"
 
-[source.devbox]
-registry = "sparse+https://box.w0x7ce.eu/crates/"
+[source.edgemirror]
+registry = "sparse+https://edgemirror.w0x7ce.eu/crates/"
 ```
 
 Use the new test runtime download route:
 
 ```bash
-curl -L -O "https://box.w0x7ce.eu/downloads/node/v22.11.0/node-v22.11.0-x64.msi"
-curl -L -O "https://box.w0x7ce.eu/downloads/https://nodejs.org/dist/v22.11.0/node-v22.11.0-x64.msi"
+curl -L -O "https://edgemirror.w0x7ce.eu/downloads/node/v22.11.0/node-v22.11.0-x64.msi"
+curl -L -O "https://edgemirror.w0x7ce.eu/downloads/https://nodejs.org/dist/v22.11.0/node-v22.11.0-x64.msi"
 ```
 
 ## Project Layout

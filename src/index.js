@@ -1,4 +1,4 @@
-import box from "./tools/box.js";
+import portal from "./tools/portal.js";
 import { HEALTH_PATHS, HELP_DEFINITION, PROJECT, TOOL_DEFINITIONS } from "./config.js";
 import docker from "./tools/docker.js";
 import github from "./tools/github.js";
@@ -14,7 +14,7 @@ import crates from "./tools/crates.js";
 import downloads from "./tools/downloads.js";
 
 const HANDLERS = new Map([
-  ["box", box],
+  ["portal", portal],
   ["pypi", pypi],
   ["hf", hf],
   ["github", github],
@@ -37,6 +37,8 @@ const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
 const HOST_ROUTES = new Map(TOOLS.map((tool) => [tool.host, tool]));
 const PATH_ROUTES = new Map(TOOLS.map((tool) => [tool.key, tool]));
 PATH_ROUTES.set("help", { key: "help", handler: help });
+PATH_ROUTES.set("edgemirror", { key: "portal", handler: portal });
+PATH_ROUTES.set("box", { key: "portal", handler: portal });
 
 export default {
   async fetch(request, env, ctx) {
@@ -69,8 +71,8 @@ export default {
     const pathTool = PATH_ROUTES.get(firstSegment);
     if (pathTool) {
       const routedRequest = pathTool.keepPathPrefix
-        ? withToolContext(request, firstSegment)
-        : stripToolPrefix(request, firstSegment);
+        ? withToolContext(request, pathTool.key)
+        : stripToolPrefix(request, firstSegment, pathTool.key);
       return pathTool.handler.fetch(routedRequest, env, ctx);
     }
 
@@ -79,7 +81,7 @@ export default {
       return hostTool.handler.fetch(request, env, ctx);
     }
 
-    return box.fetch(withToolContext(request, "box"), env, ctx);
+    return portal.fetch(withToolContext(request, "portal"), env, ctx);
   },
 };
 
@@ -93,7 +95,7 @@ function jsonResponse(body, init = {}) {
   });
 }
 
-function stripToolPrefix(request, segment) {
+function stripToolPrefix(request, segment, contextSegment = segment) {
   const url = new URL(request.url);
   const prefix = `/${segment}`;
   if (url.pathname === prefix) {
@@ -101,12 +103,12 @@ function stripToolPrefix(request, segment) {
   } else if (url.pathname.startsWith(`${prefix}/`)) {
     url.pathname = url.pathname.slice(prefix.length);
   }
-  return withToolContext(new Request(url.toString(), request), segment);
+  return withToolContext(new Request(url.toString(), request), contextSegment);
 }
 
 function withToolContext(request, segment) {
   const headers = new Headers(request.headers);
-  headers.set("X-DevBox-Tool-Key", segment);
-  headers.set("X-DevBox-Base-Path", segment === "box" ? "" : `/${segment}`);
+  headers.set("X-EdgeMirror-Tool-Key", segment);
+  headers.set("X-EdgeMirror-Base-Path", segment === "portal" ? "" : `/${segment}`);
   return new Request(request, { headers });
 }

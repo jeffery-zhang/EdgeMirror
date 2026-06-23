@@ -5,9 +5,9 @@ import { escapeHtml } from "../proxy-utils.js";
 
 const COPY = {
   en: {
-    eyebrow: "DevBox Workers",
-    title: "Developer acceleration, one clean domain.",
-    lead: "Open a guided tool page, copy a ready command, or configure package managers and CLIs to use the edge routes directly.",
+    eyebrow: "EdgeMirror",
+    title: "Edge mirrors for every developer source.",
+    lead: "Open a guided mirror page, copy a ready command, or configure package managers and CLIs to use the edge routes directly.",
     stable: "Stable accelerators",
     stableHint: "Verified and recommended for daily use.",
     test: "Test accelerators",
@@ -19,8 +19,8 @@ const COPY = {
     health: "Health check",
   },
   es: {
-    eyebrow: "DevBox Workers",
-    title: "Aceleracion para developers en un dominio limpio.",
+    eyebrow: "EdgeMirror",
+    title: "Mirrors edge para cada fuente developer.",
     lead: "Abre una pagina guiada, copia un comando listo o configura gestores de paquetes y CLIs para usar las rutas edge directamente.",
     stable: "Aceleradores Stable",
     stableHint: "Verificados y recomendados para uso diario.",
@@ -33,9 +33,9 @@ const COPY = {
     health: "Salud",
   },
   zh: {
-    eyebrow: "DevBox Workers",
-    title: "一个清爽域名，聚合开发加速能力。",
-    lead: "可以打开网页直接使用，也可以复制命令，把加速地址写进包管理器、CLI、Docker 或下载工具。",
+    eyebrow: "EdgeMirror",
+    title: "一个域名，聚合各种源加速。",
+    lead: "可以打开网页直接使用，也可以复制命令，把边缘镜像地址写进包管理器、CLI、Docker 或下载工具。",
     stable: "Stable 加速服务",
     stableHint: "已验证，推荐日常使用。",
     test: "Test 加速服务",
@@ -180,10 +180,10 @@ function htmlPage(request) {
   const copy = COPY[lang] ?? COPY.en;
   const htmlLang = LANGUAGES[lang]?.htmlLang ?? "en";
   const urls = Object.fromEntries(TOOL_DEFINITIONS.map((tool) => [tool.key, getToolBaseUrl(request, tool.key)]));
-  urls.box = getToolBaseUrl(request, "box");
+  urls.portal = getToolBaseUrl(request, "portal");
   urls.help = getToolBaseUrl(request, "help");
   const dockerHost = getDockerRegistryHost(request);
-  const nav = renderToolNav(request, "box");
+  const nav = renderToolNav(request, "portal");
   const stableTools = TOOL_DEFINITIONS.filter((tool) => tool.status === "stable");
   const testTools = TOOL_DEFINITIONS.filter((tool) => tool.status === "test");
 
@@ -192,13 +192,13 @@ function htmlPage(request) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${escapeHtml(PROJECT.name)} | Developer Accelerator Toolbox</title>
+  <title>${escapeHtml(PROJECT.name)} | Edge Mirror Gateway</title>
   <meta name="description" content="${escapeHtml(PROJECT.description)}">
   <style>${portalCss()}</style>
 </head>
 <body>
   ${nav}
-  <!-- identity: Stable accelerators -->
+  <!-- identity: Edge mirrors -->
   <main class="portal-shell">
     <section class="hero">
       <div class="hero-copy">
@@ -215,8 +215,8 @@ function htmlPage(request) {
         <div class="metric"><span>${escapeHtml(copy.services)}</span><strong>${TOOL_DEFINITIONS.length}</strong></div>
         <div class="metric"><span>${escapeHtml(copy.stable)}</span><strong>${stableTools.length}</strong></div>
         <div class="metric"><span>${escapeHtml(copy.test)}</span><strong>${testTools.length}</strong></div>
-        <div class="metric wide"><span>${escapeHtml(copy.primary)}</span><strong>${escapeHtml(urls.box)}</strong></div>
-        <div class="metric wide"><span>${escapeHtml(copy.health)}</span><strong>${escapeHtml(urls.box)}/healthz</strong></div>
+        <div class="metric wide"><span>${escapeHtml(copy.primary)}</span><strong>${escapeHtml(urls.portal)}</strong></div>
+        <div class="metric wide"><span>${escapeHtml(copy.health)}</span><strong>${escapeHtml(urls.portal)}/healthz</strong></div>
       </aside>
     </section>
 

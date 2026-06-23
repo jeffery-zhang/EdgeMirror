@@ -82,7 +82,7 @@ function renderPage(request, baseUrl) {
     lang,
     nav,
     note: copy.note,
-    pageTitle: "Maven Proxy | DevBox Workers",
+    pageTitle: "Maven Proxy | EdgeMirror",
     primaryCommand: {
       title: "Maven Central",
       command: `${baseUrl}/maven-central/com/google/guava/guava/maven-metadata.xml`,

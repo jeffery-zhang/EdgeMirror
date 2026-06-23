@@ -6,11 +6,11 @@ import { escapeHtml } from "../proxy-utils.js";
 const COPY = {
   en: {
     metaDescription:
-      "DevBox Workers help page: one-domain routes, web UI, CLI usage, package proxy configuration, Docker registry usage, and deployment notes.",
-    eyebrow: "DevBox Workers Help",
+      "EdgeMirror help page: one-domain routes, web UI, CLI usage, package proxy configuration, Docker registry usage, and deployment notes.",
+    eyebrow: "EdgeMirror Help",
     title: "One domain. Every accelerator.",
     lead:
-      "Use DevBox Workers as a single-domain edge toolbox. Open a web page for guided commands, or copy the routes into package managers, CLIs, Docker, and download tools.",
+      "Use EdgeMirror as a single-domain edge mirror gateway. Open a web page for guided commands, or copy the routes into package managers, CLIs, Docker, and download tools.",
     quickTitle: "Quick start",
     servicesLabel: "Services",
     stableRoutes: "Stable routes",
@@ -65,11 +65,11 @@ const COPY = {
   },
   es: {
     metaDescription:
-      "Pagina de ayuda de DevBox Workers: rutas en un solo dominio, interfaz web, uso de CLI, proxies de paquetes, Docker y notas de despliegue.",
-    eyebrow: "Ayuda de DevBox Workers",
+      "Pagina de ayuda de EdgeMirror: rutas en un solo dominio, interfaz web, uso de CLI, proxies de paquetes, Docker y notas de despliegue.",
+    eyebrow: "Ayuda de EdgeMirror",
     title: "Un dominio. Todos los aceleradores.",
     lead:
-      "Usa DevBox Workers como una caja de herramientas edge con un solo dominio. Abre una pagina web para obtener comandos guiados, o copia las rutas en gestores de paquetes, CLI, Docker y herramientas de descarga.",
+      "Usa EdgeMirror como un gateway edge mirror con un solo dominio. Abre una pagina web para obtener comandos guiados, o copia las rutas en gestores de paquetes, CLI, Docker y herramientas de descarga.",
     quickTitle: "Inicio rapido",
     servicesLabel: "Servicios",
     stableRoutes: "Rutas Stable",
@@ -124,11 +124,11 @@ const COPY = {
   },
   zh: {
     metaDescription:
-      "DevBox Workers 帮助页面：单域名路径、网页入口、命令行用法、包代理配置、Docker registry 用法和部署说明。",
-    eyebrow: "DevBox Workers 帮助",
+      "EdgeMirror 帮助页面：单域名路径、网页入口、命令行用法、包代理配置、Docker registry 用法和部署说明。",
+    eyebrow: "EdgeMirror 帮助",
     title: "一个域名，所有加速入口。",
     lead:
-      "把 DevBox Workers 当作单域名边缘工具箱使用。你可以打开网页生成命令，也可以把路径写入包管理器、命令行工具、Docker 和下载工具。",
+      "把 EdgeMirror 当作单域名边缘镜像网关使用。你可以打开网页生成命令，也可以把路径写入包管理器、命令行工具、Docker 和下载工具。",
     quickTitle: "快速开始",
     servicesLabel: "服务数量",
     stableRoutes: "Stable 路由",
@@ -728,7 +728,7 @@ function htmlPage(request) {
         <h1>${escapeHtml(copy.title)}</h1>
         <p class="lead">${escapeHtml(copy.lead)}</p>
         <div class="hero-actions">
-          <a class="action-link primary" href="${escapeHtml(urls.box)}">${escapeHtml(copy.openPortal)}</a>
+          <a class="action-link primary" href="${escapeHtml(urls.portal)}">${escapeHtml(copy.openPortal)}</a>
           <a class="action-link" href="#routes">${escapeHtml(copy.routeTitle)}</a>
           <a class="action-link" href="#commands">${escapeHtml(copy.commandTitle)}</a>
           <a class="action-link" href="#deploy">${escapeHtml(copy.deployTitle)}</a>
@@ -738,8 +738,8 @@ function htmlPage(request) {
         <div class="metric"><span>${escapeHtml(copy.servicesLabel)}</span><strong class="big">${serviceCount}</strong></div>
         <div class="metric"><span>${escapeHtml(copy.stableRoutes)}</span><strong>${stableCount}</strong></div>
         <div class="metric"><span>${escapeHtml(copy.testRoutes)}</span><strong>${testCount}</strong></div>
-        <div class="metric"><span>${escapeHtml(copy.primaryDomain)}</span><strong>${escapeHtml(urls.box)}</strong></div>
-        <div class="metric"><span>${escapeHtml(copy.health)}</span><strong>${escapeHtml(urls.box)}/healthz</strong></div>
+        <div class="metric"><span>${escapeHtml(copy.primaryDomain)}</span><strong>${escapeHtml(urls.portal)}</strong></div>
+        <div class="metric"><span>${escapeHtml(copy.health)}</span><strong>${escapeHtml(urls.portal)}/healthz</strong></div>
       </div>
     </section>
 
@@ -886,10 +886,10 @@ function normalizeHelpCopy(lang, copy) {
   if (lang !== "zh") return copy;
   return {
     ...copy,
-    metaDescription: "DevBox Workers 帮助页：单域名路径、网页入口、命令行用法、包管理配置、Docker registry 用法和部署说明。",
-    eyebrow: "DevBox Workers 帮助",
+    metaDescription: "EdgeMirror 帮助页：单域名路径、网页入口、命令行用法、包管理配置、Docker registry 用法和部署说明。",
+    eyebrow: "EdgeMirror 帮助",
     title: "一个域名，所有加速入口。",
-    lead: "把 DevBox Workers 当作单域名边缘工具箱使用。你可以打开网页生成命令，也可以把路径写入包管理器、命令行工具、Docker 和下载工具。",
+    lead: "把 EdgeMirror 当作单域名边缘镜像网关使用。你可以打开网页生成命令，也可以把路径写入包管理器、命令行工具、Docker 和下载工具。",
     quickTitle: "快速开始",
     servicesLabel: "服务数量",
     stableRoutes: "Stable 路由",
@@ -1059,7 +1059,7 @@ function buildCommands(urls, dockerHost, proxyDownloadBase) {
       group: "test",
       groupLabel: "Test",
       title: "crates.io",
-      value: `[source.crates-io]\nreplace-with = "devbox"\n\n[source.devbox]\nregistry = "sparse+${urls.crates}/"`,
+      value: `[source.crates-io]\nreplace-with = "edgemirror"\n\n[source.edgemirror]\nregistry = "sparse+${urls.crates}/"`,
     },
     {
       group: "test",

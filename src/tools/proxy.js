@@ -183,7 +183,7 @@ function htmlPage(request) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Proxy Downloader | DevBox Workers</title>
+  <title>Proxy Downloader | EdgeMirror</title>
   <style>${proxyPageCss()}</style>
 </head>
 <body>

@@ -76,7 +76,7 @@ function renderPage(request, baseUrl) {
     lang,
     nav,
     note: copy.note,
-    pageTitle: "npm Proxy | DevBox Workers",
+    pageTitle: "npm Proxy | EdgeMirror",
     status: "test",
     title: "npm / pnpm / yarn Proxy",
   });

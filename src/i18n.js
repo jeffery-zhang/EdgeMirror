@@ -48,7 +48,7 @@ export function renderHeaderLanguageSwitch(request, currentLang) {
     })
     .join("");
 
-  return `<div class="devbox-lang-switch" aria-label="Language switcher">${links}</div>`;
+  return `<div class="edgemirror-lang-switch" aria-label="Language switcher">${links}</div>`;
 }
 
 export function renderClientI18nScript(currentLang) {
@@ -58,8 +58,8 @@ export function renderClientI18nScript(currentLang) {
     dictionary: UI_TRANSLATIONS[currentLang] ?? UI_TRANSLATIONS.en,
   }).replaceAll("</", "<\\/");
 
-  return `<script>window.__DEVBOX_I18N__=${payload};(function(){
-  var config = window.__DEVBOX_I18N__;
+  return `<script>window.__EDGEMIRROR_I18N__=${payload};(function(){
+  var config = window.__EDGEMIRROR_I18N__;
   if (!config || !config.dictionary) return;
   document.documentElement.lang = config.htmlLang || "en";
   var dictionary = config.dictionary;

@@ -1,20 +1,20 @@
 export const PROJECT = {
-  name: "DevBox Workers",
+  name: "EdgeMirror",
   version: "1.0.0",
-  primaryHost: "box.w0x7ce.eu",
-  description: "A developer accelerator toolbox for package mirrors, model downloads, registry proxies, and universal file forwarding.",
+  primaryHost: "edgemirror.w0x7ce.eu",
+  description: "An edge mirror gateway for developer sources, package registries, model hubs, Docker images, Linux mirrors, runtime downloads, and universal file forwarding.",
 };
 
 export const HEALTH_PATHS = new Set(["/health", "/healthz", "/__health"]);
 
 export const TOOL_DEFINITIONS = [
   {
-    key: "box",
-    title: "DevBox Portal",
-    host: "box.w0x7ce.eu",
-    path: "",
+    key: "portal",
+    title: "EdgeMirror Portal",
+    host: "edgemirror.w0x7ce.eu",
+    path: "/edgemirror",
     status: "stable",
-    description: "Landing portal for all toolbox services.",
+    description: "Landing portal for all edge mirror services.",
   },
   {
     key: "pypi",

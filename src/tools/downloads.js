@@ -108,7 +108,7 @@ function renderPage(request, baseUrl) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Downloads Proxy | DevBox Workers</title>
+  <title>Downloads Proxy | EdgeMirror</title>
   <style>${downloadPageCss()}</style>
 </head>
 <body>

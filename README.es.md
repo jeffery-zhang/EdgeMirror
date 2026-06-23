@@ -2,23 +2,27 @@
   <a href="README.md">English</a> | <strong>Español</strong> | <a href="README.zh-CN.md">中文</a>
 </p>
 
-<h1 align="center">DevBox Workers</h1>
+<h1 align="center">EdgeMirror</h1>
 
 <p align="center">
-  Caja de herramientas edge para acelerar PyPI, PyTorch, Hugging Face, GitHub, Docker, mirrors Linux, npm, Go modules, Maven, crates.io, descargas de runtimes y archivos HTTP/HTTPS.
+  Gateway edge mirror estilo CDN para fuentes de desarrollo.
 </p>
 
 <p align="center">
-  <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/box-tools">
+  Acelera PyPI, PyTorch, Hugging Face, GitHub, Docker, mirrors Linux, npm, Go modules, Maven, crates.io, descargas de runtimes y archivos HTTP/HTTPS desde un solo dominio.
+</p>
+
+<p align="center">
+  <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/edgemirror">
     <img alt="Deploy to Cloudflare" src="https://img.shields.io/badge/Deploy%20to-Cloudflare-f38020?style=for-the-badge&logo=cloudflare&logoColor=white&labelColor=111827">
   </a>
-  <a href="https://vercel.com/new/clone?repository-url=https://github.com/tianrking/box-tools">
+  <a href="https://vercel.com/new/clone?repository-url=https://github.com/tianrking/edgemirror">
     <img alt="Deploy with Vercel" src="https://img.shields.io/badge/Deploy%20with-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white&labelColor=111827">
   </a>
 </p>
 
 <p align="center">
-  <img alt="Verify" src="https://img.shields.io/github/actions/workflow/status/tianrking/box-tools/verify.yml?branch=main&style=for-the-badge&label=verify">
+  <img alt="Verify" src="https://img.shields.io/github/actions/workflow/status/tianrking/edgemirror/verify.yml?branch=main&style=for-the-badge&label=verify">
   <img alt="Runtime" src="https://img.shields.io/badge/runtime-Cloudflare%20Workers%20%7C%20Vercel%20Functions-0f172a?style=for-the-badge">
   <img alt="JavaScript ESM" src="https://img.shields.io/badge/JavaScript-ESM-f7df1e?style=for-the-badge&labelColor=111827">
   <img alt="Single domain" src="https://img.shields.io/badge/single--domain-paths-2563eb?style=for-the-badge">
@@ -27,7 +31,7 @@
 
 ## Resumen
 
-DevBox Workers es una aplicacion edge de un solo dominio. El modelo recomendado es publicar un dominio, por ejemplo `box.w0x7ce.eu`, y servir cada acelerador desde una ruta: `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, `/proxy`, `/npm`, `/go`, `/maven`, `/crates`, `/downloads` y `/help`.
+EdgeMirror es un gateway edge mirror de un solo dominio. El modelo recomendado es publicar un dominio, por ejemplo `edgemirror.w0x7ce.eu`, y servir cada acelerador desde una ruta: `/edgemirror`, `/pypi`, `/hf`, `/github`, `/docker`, `/mirrors`, `/proxy`, `/npm`, `/go`, `/maven`, `/crates`, `/downloads` y `/help`.
 
 Mantenedor: [tianrking](https://github.com/tianrking)
 
@@ -39,7 +43,7 @@ Palabras clave: Cloudflare Workers proxy, Vercel Functions proxy, PyPI mirror, P
 
 | Estado | Servicio | Ruta | Que acelera |
 | --- | --- | --- | --- |
-| Stable | DevBox Portal | `/` o `/box` | Panel visual y ejemplos de uso |
+| Stable | EdgeMirror Portal | `/` o `/edgemirror` | Panel visual y ejemplos de uso |
 | Stable | Help | `/help` | Guia de rutas, uso web, comandos y configuracion en English, Español y 中文 |
 | Stable | PyPI / PyTorch | `/pypi` | PyPI simple index, paquetes Python y wheels de PyTorch |
 | Stable | Hugging Face | `/hf` | Modelos, datasets, API y descargas LFS |
@@ -58,13 +62,13 @@ Palabras clave: Cloudflare Workers proxy, Vercel Functions proxy, PyPI mirror, P
 Cloudflare:
 
 ```text
-https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/box-tools
+https://deploy.workers.cloudflare.com/?url=https://github.com/tianrking/edgemirror
 ```
 
 Vercel:
 
 ```text
-https://vercel.com/new/clone?repository-url=https://github.com/tianrking/box-tools
+https://vercel.com/new/clone?repository-url=https://github.com/tianrking/edgemirror
 ```
 
 El `wrangler.toml` por defecto es portable: no vincula el dominio del mantenedor. Despliega primero, luego agrega tu dominio en Cloudflare o usa `wrangler.custom-domain.example.toml` como referencia.
@@ -72,14 +76,14 @@ El `wrangler.toml` por defecto es portable: no vincula el dominio del mantenedor
 ## Ejemplos
 
 ```bash
-pip install numpy -i https://box.w0x7ce.eu/pypi/simple/
-export HF_ENDPOINT=https://box.w0x7ce.eu/hf
+pip install numpy -i https://edgemirror.w0x7ce.eu/pypi/simple/
+export HF_ENDPOINT=https://edgemirror.w0x7ce.eu/hf
 huggingface-cli download gpt2
-git clone https://box.w0x7ce.eu/github/vercel/next.js.git
-docker pull box.w0x7ce.eu/library/nginx:latest
-npm install lodash --registry=https://box.w0x7ce.eu/npm/
-go env -w GOPROXY=https://box.w0x7ce.eu/go,direct
-curl -L -O "https://box.w0x7ce.eu/downloads/node/v22.11.0/node-v22.11.0-x64.msi"
+git clone https://edgemirror.w0x7ce.eu/github/vercel/next.js.git
+docker pull edgemirror.w0x7ce.eu/library/nginx:latest
+npm install lodash --registry=https://edgemirror.w0x7ce.eu/npm/
+go env -w GOPROXY=https://edgemirror.w0x7ce.eu/go,direct
+curl -L -O "https://edgemirror.w0x7ce.eu/downloads/node/v22.11.0/node-v22.11.0-x64.msi"
 ```
 
 ## Desarrollo local

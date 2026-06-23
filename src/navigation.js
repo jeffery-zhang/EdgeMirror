@@ -6,7 +6,7 @@ const KNOWN_HOSTS = new Set(TOOL_DEFINITIONS.map((tool) => tool.host));
 const NAV_ITEMS = [...TOOL_DEFINITIONS, HELP_DEFINITION];
 
 const NAV_LABELS = {
-  box: "Box",
+  portal: "EdgeMirror",
   pypi: "PyPI",
   hf: "Hugging Face",
   github: "GitHub",
@@ -47,14 +47,14 @@ export function renderToolNav(request, activeKey) {
   });
   const languageSwitch = renderHeaderLanguageSwitch(request, lang);
 
-  return `${renderSharedHeaderStyles()}<div class="devbox-header"><nav class="nav" aria-label="Tool navigation">${links.join("")}</nav>${languageSwitch}</div>${renderClientI18nScript(lang)}`;
+  return `${renderSharedHeaderStyles()}<div class="edgemirror-header"><nav class="nav" aria-label="Tool navigation">${links.join("")}</nav>${languageSwitch}</div>${renderClientI18nScript(lang)}`;
 }
 
 function renderSharedHeaderStyles() {
   return `<style>
-    :root { --devbox-header-height: 74px; }
-    body { padding-top: var(--devbox-header-height) !important; }
-    .devbox-header {
+    :root { --edgemirror-header-height: 74px; }
+    body { padding-top: var(--edgemirror-header-height) !important; }
+    .edgemirror-header {
       position: fixed !important;
       top: 20px !important;
       left: 24px !important;
@@ -74,7 +74,7 @@ function renderSharedHeaderStyles() {
       animation: none !important;
       pointer-events: none !important;
     }
-    .devbox-header .nav {
+    .edgemirror-header .nav {
       position: static !important;
       inset: auto !important;
       width: auto !important;
@@ -95,7 +95,7 @@ function renderSharedHeaderStyles() {
       scrollbar-width: none !important;
       pointer-events: auto !important;
     }
-    .devbox-lang-switch {
+    .edgemirror-lang-switch {
       flex: 0 0 auto !important;
       display: inline-flex !important;
       align-items: center !important;
@@ -109,7 +109,7 @@ function renderSharedHeaderStyles() {
       -webkit-backdrop-filter: blur(8px) !important;
       pointer-events: auto !important;
     }
-    .devbox-lang-switch a {
+    .edgemirror-lang-switch a {
       flex: 0 0 auto !important;
       display: inline-flex !important;
       align-items: center !important;
@@ -127,12 +127,12 @@ function renderSharedHeaderStyles() {
       background: transparent !important;
       border: 0 !important;
     }
-    .devbox-lang-switch a.active {
+    .edgemirror-lang-switch a.active {
       background: #0f172a !important;
       color: #ffffff !important;
     }
-    .devbox-header .nav::-webkit-scrollbar { display: none !important; }
-    .devbox-header .nav a {
+    .edgemirror-header .nav::-webkit-scrollbar { display: none !important; }
+    .edgemirror-header .nav a {
       flex: 0 0 auto !important;
       display: inline-flex !important;
       align-items: center !important;
@@ -154,36 +154,36 @@ function renderSharedHeaderStyles() {
       -webkit-backdrop-filter: blur(8px) !important;
       transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
     }
-    .devbox-header .nav a:hover {
+    .edgemirror-header .nav a:hover {
       background: #ffffff !important;
       color: #0f172a !important;
       border-color: rgba(15, 23, 42, 0.16) !important;
       transform: translateY(-1px) !important;
     }
-    .devbox-header .nav a.active {
+    .edgemirror-header .nav a.active {
       background: #0f172a !important;
       color: #ffffff !important;
       border-color: #0f172a !important;
       box-shadow: 0 8px 22px rgba(15, 23, 42, 0.18) !important;
     }
     @media (max-width: 640px) {
-      :root { --devbox-header-height: 70px; }
-      .devbox-header {
+      :root { --edgemirror-header-height: 70px; }
+      .edgemirror-header {
         top: 12px !important;
         left: 12px !important;
         right: 12px !important;
         justify-content: flex-start !important;
         gap: 8px !important;
       }
-      .devbox-header .nav {
+      .edgemirror-header .nav {
         width: 100% !important;
         justify-content: flex-start !important;
         flex-wrap: nowrap !important;
         gap: 6px !important;
       }
-      .devbox-header .nav a { min-height: 32px !important; padding: 0 11px !important; font-size: 12px !important; }
-      .devbox-lang-switch { gap: 3px !important; padding: 2px !important; }
-      .devbox-lang-switch a { min-height: 28px !important; min-width: 30px !important; padding: 0 7px !important; font-size: 11px !important; }
+      .edgemirror-header .nav a { min-height: 32px !important; padding: 0 11px !important; font-size: 12px !important; }
+      .edgemirror-lang-switch { gap: 3px !important; padding: 2px !important; }
+      .edgemirror-lang-switch a { min-height: 28px !important; min-width: 30px !important; padding: 0 7px !important; font-size: 11px !important; }
     }
   </style>`;
 }

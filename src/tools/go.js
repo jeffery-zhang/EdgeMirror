@@ -74,7 +74,7 @@ function renderPage(request, baseUrl) {
     lang,
     nav,
     note: copy.note,
-    pageTitle: "Go Module Proxy | DevBox Workers",
+    pageTitle: "Go Module Proxy | EdgeMirror",
     status: "test",
     title: "Go Module Proxy",
   });
