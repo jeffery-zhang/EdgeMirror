@@ -4,6 +4,7 @@ import { getLanguage, preserveLanguageUrl, renderClientI18nScript, renderHeaderL
 const TOOL_BY_KEY = new Map(TOOL_DEFINITIONS.map((tool) => [tool.key, tool]));
 const KNOWN_HOSTS = new Set(TOOL_DEFINITIONS.map((tool) => tool.host));
 const NAV_ITEMS = [...TOOL_DEFINITIONS, HELP_DEFINITION];
+const REPO_URL = "https://github.com/tianrking/EdgeMirror";
 
 const NAV_LABELS = {
   portal: "EdgeMirror",
@@ -45,6 +46,7 @@ export function renderToolNav(request, activeKey) {
     const href = preserveLanguageUrl(getToolBaseUrl(request, item.key), lang);
     return `<a href="${href}"${active}>${NAV_LABELS[item.key] ?? item.title}</a>`;
   });
+  links.push(`<a class="repo-link" href="${REPO_URL}" target="_blank" rel="noopener noreferrer">tianrking/EdgeMirror</a>`);
   const languageSwitch = renderHeaderLanguageSwitch(request, lang);
 
   return `${renderSharedHeaderStyles()}<div class="edgemirror-header"><nav class="nav" aria-label="Tool navigation">${links.join("")}</nav>${languageSwitch}</div>${renderClientI18nScript(lang)}`;
@@ -166,6 +168,17 @@ function renderSharedHeaderStyles() {
       color: #334155 !important;
       border-color: rgba(99, 124, 145, 0.2) !important;
       box-shadow: 0 8px 22px rgba(86, 112, 137, 0.12) !important;
+    }
+    .edgemirror-header .nav a.repo-link {
+      background: #f5f1fb !important;
+      color: #5f5873 !important;
+      border-color: #e1d8ef !important;
+      font-weight: 900 !important;
+    }
+    .edgemirror-header .nav a.repo-link:hover {
+      background: #ffffff !important;
+      color: #334155 !important;
+      border-color: #d1c3e4 !important;
     }
     @media (max-width: 640px) {
       :root { --edgemirror-header-height: 70px; }
