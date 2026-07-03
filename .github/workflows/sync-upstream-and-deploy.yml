@@ -1,0 +1,73 @@
+name: Sync upstream and deploy
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every 3 days at 03:17 UTC / 11:17 Asia-Shanghai.
+    - cron: '17 3 */3 * *'
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: edgemirror-sync-deploy
+  cancel-in-progress: false
+
+jobs:
+  sync-and-deploy:
+    name: Sync upstream and deploy Worker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/tianrking/EdgeMirror.git || git remote set-url upstream https://github.com/tianrking/EdgeMirror.git
+          git fetch upstream main
+
+      - name: Fast-forward from upstream when scheduled or manual
+        id: sync
+        if: github.event_name != 'push'
+        run: |
+          before=$(git rev-parse HEAD)
+          git merge --ff-only upstream/main
+          after=$(git rev-parse HEAD)
+          if [ "$before" != "$after" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push synced changes
+        if: github.event_name != 'push' && steps.sync.outputs.changed == 'true'
+        run: git push origin HEAD:main
+
+      - name: Setup Node.js
+        if: github.event_name == 'push' || steps.sync.outputs.changed == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        if: github.event_name == 'push' || steps.sync.outputs.changed == 'true'
+        run: npm ci
+
+      - name: Verify project
+        if: github.event_name == 'push' || steps.sync.outputs.changed == 'true'
+        run: npm run verify
+
+      - name: Deploy to Cloudflare Workers
+        if: github.event_name == 'push' || steps.sync.outputs.changed == 'true'
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

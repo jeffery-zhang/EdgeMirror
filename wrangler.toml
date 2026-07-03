@@ -6,3 +6,7 @@ preview_urls = false
 
 [observability]
 enabled = true
+
+[[routes]]
+pattern = "mirrors.zhj13.top"
+custom_domain = true
