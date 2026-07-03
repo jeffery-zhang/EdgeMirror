@@ -33,12 +33,14 @@ jobs:
           git remote add upstream https://github.com/tianrking/EdgeMirror.git || git remote set-url upstream https://github.com/tianrking/EdgeMirror.git
           git fetch upstream main
 
-      - name: Fast-forward from upstream when scheduled or manual
+      - name: Merge upstream when scheduled or manual
         id: sync
         if: github.event_name != 'push'
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           before=$(git rev-parse HEAD)
-          git merge --ff-only upstream/main
+          git merge --no-edit upstream/main
           after=$(git rev-parse HEAD)
           if [ "$before" != "$after" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
